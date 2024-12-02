@@ -1,9 +1,9 @@
 
 
-pub fn solve1(lines: &Vec<String>) -> Option<i64> {
+pub fn solve1(_lines: &Vec<String>) -> Option<i64> {
     None
 }
 
-pub fn solve2(lines: &Vec<String>) -> Option<i64> {
+pub fn solve2(_lines: &Vec<String>) -> Option<i64> {
     None
 }

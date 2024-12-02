@@ -11,6 +11,5 @@ fn read_lines(path: &PathBuf) -> Vec<String> {
     BufReader::new(File::open(path).unwrap())
         .lines()
         .map(|line| line.unwrap())
-        .map(String::from)
         .collect()
 }

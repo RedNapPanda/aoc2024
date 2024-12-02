@@ -4,6 +4,7 @@ mod utils;
 use crate::utils::input;
 use std::time::Instant;
 use structopt::StructOpt;
+use days::{day1, day2, day3};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "aoc 2024")]
@@ -17,20 +18,24 @@ fn main() {
     let lines = input::read_input(opt.day);
     let func1 = get_day_fn(opt.day, true);
     let time1 = Instant::now();
-    let result1 = func1(&lines).unwrap();
+    let result1 = func1(&lines);
     let elapsed1 = time1.elapsed().as_micros();
     let func2 = get_day_fn(opt.day, false);
     let time2 = Instant::now();
-    let result2 = func2(&lines).unwrap();
+    let result2 = func2(&lines);
     let elapsed2 = time2.elapsed().as_micros();
-    println!("P1: {} | {}µs", result1, elapsed1);
-    println!("P2: {} | {}µs", result2, elapsed2);
+    println!("P1: {:?} | {}µs", result1, elapsed1);
+    println!("P2: {:?} | {}µs", result2, elapsed2);
 }
 
 fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> Option<i64> {
     match day {
-        1 if part1 => days::day1::solve1,
-        1 => days::day1::solve2,
+        1 if part1 => day1::solve1,
+        1 => day1::solve2,
+        2 if part1 => day2::solve1,
+        2 => day2::solve2,
+        3 if part1 => day3::solve1,
+        3 => day3::solve2,
         _ => panic!("Invalid day"),
     }
 }
