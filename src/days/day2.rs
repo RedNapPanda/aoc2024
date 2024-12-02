@@ -6,7 +6,7 @@ where I : Iterator<Item=&'a i64> {
 }
 
 fn is_valid(levels: &Vec<i64>) -> bool {
-    let iter = levels.iter().skip(1);
+    let iter = levels.into_iter().skip(1);
     fold_valid(levels[0], levels[0] < levels[1], iter)
 }
 
