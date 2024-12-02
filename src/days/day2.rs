@@ -1,12 +1,11 @@
 fn is_valid(levels: &Vec<i64>) -> bool {
     let dir = levels[0] < levels[1];
-    for i in 1..levels.len() {
-        let (l, r) = (levels[i-1], levels[i]);
-        if l == r || (l < r) != dir || (l - r).abs() > 3 {
-            return false;
-        }
-    }
-    true
+    levels
+        .iter()
+        .skip(1)
+        .fold((levels[0], true), |(l, res), r| {
+            (*r, res && l != *r && (l < *r) == dir && (l - r).abs() < 4)
+        }).1
 }
 
 fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {
