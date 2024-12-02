@@ -12,8 +12,12 @@ fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {
     let mut iter = levels
         .into_iter()
         .enumerate()
-        .filter(|&(i, _)| i != skip)
-        .map(|(_, l)| l)
+        .filter_map(|(i, v)| {
+            if i == skip {
+                return None
+            }
+            Some(v)
+        })
         .peekable();
     let a = *iter.next().unwrap();
     let b = **iter.peek().unwrap();
