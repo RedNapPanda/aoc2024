@@ -1,13 +1,11 @@
 fn fold_valid<'a, I>(v: i64, dir: bool, iter: I) -> bool
-where I : Iterator<Item=&'a i64> {
+where
+    I: Iterator<Item = &'a i64>,
+{
     iter.fold((v, true), |(l, res), &r| {
         (r, res && l != r && (l < r) == dir && (l - r).abs() < 4)
-    }).1
-}
-
-fn is_valid(levels: &Vec<i64>) -> bool {
-    let iter = levels.into_iter().skip(1);
-    fold_valid(levels[0], levels[0] < levels[1], iter)
+    })
+    .1
 }
 
 fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {
@@ -30,7 +28,10 @@ pub fn solve1(lines: &Vec<String>) -> Option<i64> {
                 .map(|s| s.parse::<i64>().unwrap())
                 .collect::<Vec<_>>()
         })
-        .filter(|levels| is_valid(&levels))
+        .filter(|levels| {
+            let iter = levels.into_iter().skip(1);
+            fold_valid(levels[0], levels[0] < levels[1], iter)
+        })
         .count() as i64;
     Some(result)
 }
