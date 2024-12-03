@@ -34,7 +34,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> Option<i64> {
+fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
     match day {
         1 if part1 => day1::solve1,
         1 => day1::solve2,

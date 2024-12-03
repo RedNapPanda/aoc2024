@@ -24,8 +24,8 @@ fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {
     fold_valid(a, a < b, iter)
 }
 
-pub fn solve1(lines: &Vec<String>) -> Option<i64> {
-    let result = lines
+pub fn solve1(lines: &Vec<String>) -> i64 {
+    lines
         .into_iter()
         .map(|line| {
             line.split_whitespace()
@@ -36,12 +36,11 @@ pub fn solve1(lines: &Vec<String>) -> Option<i64> {
             let iter = levels.into_iter().skip(1);
             fold_valid(levels[0], levels[0] < levels[1], iter)
         })
-        .count() as i64;
-    Some(result)
+        .count() as i64
 }
 
-pub fn solve2(lines: &Vec<String>) -> Option<i64> {
-    let result = lines
+pub fn solve2(lines: &Vec<String>) -> i64 {
+    lines
         .into_iter()
         .map(|line| {
             line.split_whitespace()
@@ -49,6 +48,5 @@ pub fn solve2(lines: &Vec<String>) -> Option<i64> {
                 .collect::<Vec<_>>()
         })
         .filter(|levels| (0..levels.len()).any(|i| is_valid_skip(&levels, i)))
-        .count() as i64;
-    Some(result)
+        .count() as i64
 }
