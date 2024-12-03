@@ -14,7 +14,7 @@ fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {
         .enumerate()
         .filter_map(|(i, v)| {
             if i == skip {
-                return None
+                return None;
             }
             Some(v)
         })

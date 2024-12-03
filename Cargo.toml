@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 structopt = "0.3.26"
-eyre = "0.6.12"
+color-eyre = "0.6.3"
+regex = "1.11.1"
