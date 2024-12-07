@@ -4,7 +4,7 @@ mod utils;
 use crate::utils::input;
 use color_eyre::eyre::Result;
 use days::{day1, day2, day3, day4, day5, day6};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -22,14 +22,14 @@ fn main() -> Result<()> {
     let func1 = get_day_fn(opt.day, true);
     let time1 = Instant::now();
     let result1 = func1(&lines);
-    let elapsed1 = time1.elapsed().as_micros();
-    println!("P1: {:?} | {}µs", result1, elapsed1);
+    let elapsed1 = time1.elapsed();
+    println!("P1: {:?} | {}", result1, time_str(&elapsed1));
 
     let func2 = get_day_fn(opt.day, false);
     let time2 = Instant::now();
     let result2 = func2(&lines);
-    let elapsed2 = time2.elapsed().as_micros();
-    println!("P2: {:?} | {}µs", result2, elapsed2);
+    let elapsed2 = time2.elapsed();
+    println!("P2: {:?} | {}", result2, time_str(&elapsed2));
 
     Ok(())
 }
@@ -50,4 +50,18 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
         6 => day6::solve2,
         _ => panic!("Invalid day"),
     }
+}
+
+fn time_str(elasped: &Duration) -> String {
+    let mut time_elapsed = elasped.as_micros();
+    let mut suffix = "µs";
+    if time_elapsed > 1000 {
+        time_elapsed = elasped.as_millis();
+        suffix = "ms"
+    }
+    if time_elapsed > 1000 {
+        time_elapsed = elasped.as_secs() as u128;
+        suffix = "s"
+    }
+    format!("{:?}{}", time_elapsed, suffix)
 }
