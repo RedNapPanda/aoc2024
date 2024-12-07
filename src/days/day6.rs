@@ -27,6 +27,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         })
         .count() as i64
 }
+
 fn build_graph(lines: &Vec<String>) -> (Vec<Vec<char>>, (i32, i32)) {
     let mut pos: (i32, i32) = (0, 0);
     let graph = lines
@@ -60,10 +61,7 @@ fn rot90(pos: (i32, i32)) -> (i32, i32) {
     }
 }
 
-fn walk(
-    graph: &Vec<Vec<char>>,
-    mut pos: (i32, i32)
-) -> (HashSet<((i32, i32), (i32, i32))>, bool) {
+fn walk(graph: &Vec<Vec<char>>, mut pos: (i32, i32)) -> (HashSet<((i32, i32), (i32, i32))>, bool) {
     let mut dir = (-1, 0);
     let mut seen = HashSet::new();
     let mut fast = pos;
@@ -73,12 +71,13 @@ fn walk(
         let next = (pos.0 + dir.0, pos.1 + dir.1);
         for _ in 0..2 {
             if init && (!is_valid(graph, fast) || (fast == pos && fast_dir == dir)) {
-                return (seen, fast == pos)
+                return (seen, fast == pos);
             }
             seen.insert((fast, dir));
             let fast_next = (fast.0 + fast_dir.0, fast.1 + fast_dir.1);
-            if is_valid(graph, fast_next) &&
-                graph[fast_next.0 as usize][fast_next.1 as usize] == '#' {
+            if is_valid(graph, fast_next)
+                && graph[fast_next.0 as usize][fast_next.1 as usize] == '#'
+            {
                 fast_dir = rot90(fast_dir);
                 continue;
             }

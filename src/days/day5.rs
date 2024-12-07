@@ -47,7 +47,11 @@ fn build_graph(lines: &Vec<String>) -> (HashMap<&str, HashSet<&str>>, Vec<String
     (graph, lines[(break_line + 1)..].to_vec())
 }
 
-fn is_valid<'a>(update: &Vec<&'a str>, graph: &HashMap<&str, HashSet<&str>>, seen: &mut HashSet<&'a str>, ) -> bool {
+fn is_valid<'a>(
+    update: &Vec<&'a str>,
+    graph: &HashMap<&str, HashSet<&str>>,
+    seen: &mut HashSet<&'a str>,
+) -> bool {
     seen.clear();
     update.iter().all(|&page| {
         if !graph.contains_key(page) {
