@@ -1,6 +1,8 @@
 use itertools::Itertools;
 use std::collections::HashSet;
 
+type Point = (i32, i32);
+
 pub fn solve1(lines: &Vec<String>) -> i64 {
     let (graph, start) = &build_graph(lines);
     walk(graph, (start.0, start.1))
@@ -28,8 +30,8 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         .count() as i64
 }
 
-fn build_graph(lines: &Vec<String>) -> (Vec<Vec<char>>, (i32, i32)) {
-    let mut pos: (i32, i32) = (0, 0);
+fn build_graph(lines: &Vec<String>) -> (Vec<Vec<char>>, Point) {
+    let mut pos: Point = (0, 0);
     let graph = lines
         .iter()
         .enumerate()
@@ -47,11 +49,11 @@ fn build_graph(lines: &Vec<String>) -> (Vec<Vec<char>>, (i32, i32)) {
     (graph, pos)
 }
 
-fn is_valid(graph: &Vec<Vec<char>>, pos: (i32, i32)) -> bool {
+fn is_valid(graph: &Vec<Vec<char>>, pos: Point) -> bool {
     pos.0 >= 0 && pos.0 < graph.len() as i32 && pos.1 >= 0 && pos.1 < graph[0].len() as i32
 }
 
-fn rot90(pos: (i32, i32)) -> (i32, i32) {
+fn rot90(pos: Point) -> Point {
     match pos {
         (0, 1) => (1, 0),
         (0, -1) => (-1, 0),
@@ -61,7 +63,7 @@ fn rot90(pos: (i32, i32)) -> (i32, i32) {
     }
 }
 
-fn walk(graph: &Vec<Vec<char>>, mut pos: (i32, i32)) -> (HashSet<((i32, i32), (i32, i32))>, bool) {
+fn walk(graph: &Vec<Vec<char>>, mut pos: Point) -> (HashSet<(Point, Point)>, bool) {
     let mut dir = (-1, 0);
     let mut seen = HashSet::new();
     let mut fast = pos;

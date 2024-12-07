@@ -1,3 +1,5 @@
+type Point = (i64, i64);
+
 const XMAS_ENUM: [XMAS; 8] = [
     XMAS::Right,
     XMAS::Left,
@@ -87,7 +89,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         .count() as i64
 }
 
-fn inbound(graph: &Vec<Vec<char>>, pos: (i64, i64)) -> bool {
+fn inbound(graph: &Vec<Vec<char>>, pos: Point) -> bool {
     let (row, col) = pos;
     row >= 0 && row < graph.len() as i64 && col >= 0 && col < graph[0].len() as i64
 }
@@ -104,7 +106,7 @@ enum XMAS {
 }
 
 impl XMAS {
-    fn point(&self, pos: (i64, i64)) -> (i64, i64) {
+    fn point(&self, pos: Point) -> Point {
         let (row, col) = pos;
         match self {
             XMAS::LeftDown => (row - 1, col + 1),
@@ -115,7 +117,7 @@ impl XMAS {
         }
     }
 
-    fn shift(&self) -> ((i64, i64), (i64, i64), (i64, i64)) {
+    fn shift(&self) -> (Point, Point, Point) {
         match self {
             XMAS::Right => ((0, 1), (0, 2), (0, 3)),
             XMAS::Left => ((0, -1), (0, -2), (0, -3)),

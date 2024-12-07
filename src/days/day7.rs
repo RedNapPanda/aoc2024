@@ -30,8 +30,8 @@ fn solve(lines: &Vec<String>, concat: bool) -> i64 {
                     for _ in 0..acc.len() {
                         let prev = acc.pop_front().unwrap();
                         if concat {
-                            let ndigits = num.checked_ilog10().unwrap_or(0) + 1;
-                            let combined = (prev * 10_i64.pow(ndigits)) + num;
+                            let n_digits = num.checked_ilog10().unwrap_or(0) + 1;
+                            let combined = (prev * 10_i64.pow(n_digits)) + num;
                             acc.push_back(combined);
                         }
                         acc.push_back(prev + num);
