@@ -66,14 +66,14 @@ fn walk(graph: &Vec<Vec<char>>, mut pos: (i32, i32)) -> (HashSet<((i32, i32), (i
     let mut seen = HashSet::new();
     let mut fast = pos;
     let mut fast_dir = dir;
-    let mut init = false;
     while is_valid(graph, pos) {
         let next = (pos.0 + dir.0, pos.1 + dir.1);
         for _ in 0..2 {
-            if init && (!is_valid(graph, fast) || (fast == pos && fast_dir == dir)) {
-                return (seen, fast == pos);
+            let contains = seen.contains(&(fast, fast_dir));
+            if !is_valid(graph, fast) || contains {
+                return (seen, contains);
             }
-            seen.insert((fast, dir));
+            seen.insert((fast, fast_dir));
             let fast_next = (fast.0 + fast_dir.0, fast.1 + fast_dir.1);
             if is_valid(graph, fast_next)
                 && graph[fast_next.0 as usize][fast_next.1 as usize] == '#'
@@ -88,7 +88,6 @@ fn walk(graph: &Vec<Vec<char>>, mut pos: (i32, i32)) -> (HashSet<((i32, i32), (i
         } else {
             pos = next;
         }
-        init = true;
     }
     (seen, false)
 }
