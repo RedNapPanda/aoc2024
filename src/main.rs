@@ -54,14 +54,21 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
 
 fn time_str(elasped: &Duration) -> String {
     let mut time_elapsed = elasped.as_micros();
+    let mut decimals = 0;
     let mut suffix = "µs";
     if time_elapsed > 1000 {
+        decimals = time_elapsed % 1000;
         time_elapsed = elasped.as_millis();
         suffix = "ms"
     }
     if time_elapsed > 1000 {
+        decimals = time_elapsed % 1000;
         time_elapsed = elasped.as_secs() as u128;
         suffix = "s"
     }
-    format!("{:?}{}", time_elapsed, suffix)
+    if decimals > 0 {
+        format!("{:?}.{}{}", time_elapsed, decimals, suffix)
+    } else {
+        format!("{:?}{}", time_elapsed, suffix)
+    }
 }
