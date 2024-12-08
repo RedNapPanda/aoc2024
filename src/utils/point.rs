@@ -20,11 +20,43 @@ impl Add<&Point> for &Point {
     }
 }
 
+impl Add<&Point> for Point {
+    type Output = Point;
+
+    fn add(self, rhs: &Point) -> Self::Output {
+        &self + rhs
+    }
+}
+
+impl Add<Point> for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Point) -> Self::Output {
+        &self + &rhs
+    }
+}
+
 impl Sub<&Point> for &Point {
     type Output = Point;
 
     fn sub(self, rhs: &Point) -> Self::Output {
         Point { x: self.x - rhs.x, y: self.y - rhs.y }
+    }
+}
+
+impl Sub<&Point> for Point {
+    type Output = Point;
+
+    fn sub(self, rhs: &Point) -> Self::Output {
+        &self - rhs
+    }
+}
+
+impl Sub<Point> for Point {
+    type Output = Point;
+
+    fn sub(self, rhs: Point) -> Self::Output {
+        &self - &rhs
     }
 }
 
