@@ -1,4 +1,5 @@
 use std::ops::{Add, Sub};
+use crate::{forward_ref_binop, impl_ops_ref_copy};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Point {
@@ -12,53 +13,15 @@ impl Point {
     }
 }
 
-impl Add<&Point> for &Point {
-    type Output = Point;
+impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {
+    x: p.x + other.x,
+    y: p.y + other.y
+});
 
-    fn add(self, rhs: &Point) -> Self::Output {
-        Point { x: self.x + rhs.x, y: self.y + rhs.y }
-    }
-}
-
-impl Add<&Point> for Point {
-    type Output = Point;
-
-    fn add(self, rhs: &Point) -> Self::Output {
-        &self + rhs
-    }
-}
-
-impl Add<Point> for Point {
-    type Output = Point;
-
-    fn add(self, rhs: Point) -> Self::Output {
-        &self + &rhs
-    }
-}
-
-impl Sub<&Point> for &Point {
-    type Output = Point;
-
-    fn sub(self, rhs: &Point) -> Self::Output {
-        Point { x: self.x - rhs.x, y: self.y - rhs.y }
-    }
-}
-
-impl Sub<&Point> for Point {
-    type Output = Point;
-
-    fn sub(self, rhs: &Point) -> Self::Output {
-        &self - rhs
-    }
-}
-
-impl Sub<Point> for Point {
-    type Output = Point;
-
-    fn sub(self, rhs: Point) -> Self::Output {
-        &self - &rhs
-    }
-}
+impl_ops_ref_copy!(Sub, sub |p: Point, other: Point| Point {
+    x: p.x - other.x,
+    y: p.y - other.y
+});
 
 impl From<(usize, usize)> for Point {
     fn from((x, y): (usize, usize)) -> Self {
