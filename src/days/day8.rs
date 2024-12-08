@@ -37,7 +37,7 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
                     let mut a_node = &a - &step;
                     while is_valid(&a_node, height, width) {
                         vec.push(a_node.clone());
-                        a_node = a_node - &step;
+                        a_node = &a_node - &step;
                         if !part2 {
                             break;
                         }
@@ -45,7 +45,7 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
                     let mut b_node = &b + &step;
                     while is_valid(&b_node, height, width) {
                         vec.push(b_node.clone());
-                        b_node = b_node + &step;
+                        b_node = &b_node + &step;
                         if !part2 {
                             break;
                         }
