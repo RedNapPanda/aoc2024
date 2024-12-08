@@ -3,7 +3,7 @@ mod utils;
 
 use crate::utils::input;
 use color_eyre::eyre::Result;
-use days::{day1, day2, day3, day4, day5, day6, day7};
+use days::{day1, day2, day3, day4, day5, day6, day7, day8};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
 
@@ -50,6 +50,8 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
         6 => day6::solve2,
         7 if part1 => day7::solve1,
         7 => day7::solve2,
+        8 if part1 => day8::solve1,
+        8 => day8::solve2,
         _ => panic!("Invalid day"),
     }
 }
