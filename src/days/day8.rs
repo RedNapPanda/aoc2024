@@ -29,26 +29,30 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
             group
                 .map(|(_, pos)| pos)
                 // sorted top_left -> bottom_right
-                .sorted_by(|&a, &b| a.cmp(&b))
+                .sorted_by(|a, b| a.cmp(&b))
                 .tuple_combinations::<(_, _)>()
                 .flat_map(|(a, b)| {
-                    let mut vec = if part2 { vec![a, b] } else { vec![] };
-                    let step = b - a;
-                    let mut a_node = a - step;
-                    while is_valid(a_node, height, width) {
-                        vec.push(a_node);
-                        a_node = a_node - step;
+                    let mut vec = vec![];
+                    let step = &b - &a;
+                    let mut a_node = &a - &step;
+                    while is_valid(&a_node, height, width) {
+                        vec.push(a_node.clone());
+                        a_node = a_node - &step;
                         if !part2 {
                             break;
                         }
                     }
-                    let mut b_node = b + step;
-                    while is_valid(b_node, height, width) {
-                        vec.push(b_node);
-                        b_node = b_node + step;
+                    let mut b_node = &b + &step;
+                    while is_valid(&b_node, height, width) {
+                        vec.push(b_node.clone());
+                        b_node = b_node + &step;
                         if !part2 {
                             break;
                         }
+                    }
+                    if part2 {
+                        vec.push(a);
+                        vec.push(b);
                     }
                     vec
                 })
@@ -58,6 +62,6 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
         .count() as i64
 }
 
-fn is_valid(node: Point, height: i64, width: i64) -> bool {
+fn is_valid(node: &Point, height: i64, width: i64) -> bool {
     node.x >= 0 && node.x < height && node.y >= 0 && node.y < width
 }
