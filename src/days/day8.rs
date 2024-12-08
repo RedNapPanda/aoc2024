@@ -20,7 +20,7 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
                 .collect::<Vec<_>>()
         })
         // sort keys as chunk_by doesn't work when keys are not next to each other
-        // wasted a ton of time here, example doesn't have antenna non-sequentially
+        // wasted a ton of time here, example doesn't have different antenna non-sequentially
         .sorted_by(|a, b| a.0.cmp(&b.0))
         .chunk_by(|&(c, _)| c)
         .into_iter()
