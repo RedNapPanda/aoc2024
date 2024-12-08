@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use crate::utils::point::Point;
 
 pub fn solve1(lines: &Vec<String>) -> i64 {
     count_nodes(lines, false)
@@ -16,7 +17,7 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
         .flat_map(|(row, line)| {
             line.char_indices()
                 .filter(|&(_, c)| c != '.')
-                .map(move |(col, c)| (c, (row as i64, col as i64)))
+                .map(move |(col, c)| (c, Point::from((row, col))))
                 .collect::<Vec<_>>()
         })
         // sort keys as chunk_by doesn't work when keys are not next to each other
@@ -32,19 +33,19 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
                 .tuple_combinations::<(_, _)>()
                 .flat_map(|(a, b)| {
                     let mut vec = if part2 { vec![a, b] } else { vec![] };
-                    let step = (b.0 - a.0, b.1 - a.1);
-                    let mut a_node = (a.0 - step.0, a.1 - step.1);
+                    let step = b - a;
+                    let mut a_node = a - step;
                     while is_valid(a_node, height, width) {
                         vec.push(a_node);
-                        a_node = (a_node.0 - step.0, a_node.1 - step.1);
+                        a_node = a_node - step;
                         if !part2 {
                             break;
                         }
                     }
-                    let mut b_node = (b.0 + step.0, b.1 + step.1);
+                    let mut b_node = b + step;
                     while is_valid(b_node, height, width) {
                         vec.push(b_node);
-                        b_node = (b_node.0 + step.0, b_node.1 + step.1);
+                        b_node = b_node + step;
                         if !part2 {
                             break;
                         }
@@ -57,6 +58,6 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
         .count() as i64
 }
 
-fn is_valid(node: (i64, i64), height: i64, width: i64) -> bool {
-    node.0 >= 0 && node.0 < height && node.1 >= 0 && node.1 < width
+fn is_valid(node: Point, height: i64, width: i64) -> bool {
+    node.x >= 0 && node.x < height && node.y >= 0 && node.y < width
 }
