@@ -34,6 +34,9 @@ macro_rules! forward_ref_binop {
     }
 }
 
+/**
+https://github.com/rust-lang/rust/blob/1.83.0/library/core/src/ops/arith.rs#L94
+*/
 #[macro_export]
 macro_rules! impl_ops_ref_copy {
     ($imp:ident, $method:ident |$t_i:ident: $t:ty, $u_i:ident: $u:ty| $ex:expr) => {

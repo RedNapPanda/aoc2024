@@ -1,4 +1,5 @@
 pub mod input;
 pub mod point;
 pub mod grid;
-mod macros;
+pub mod macros;
+pub mod traits;
