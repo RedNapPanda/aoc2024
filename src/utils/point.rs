@@ -25,6 +25,6 @@ impl From<(i64, i64)> for Point {
 
 impl From<(usize, usize)> for Point {
     fn from((x, y): (usize, usize)) -> Self {
-        <Point as From<(i64, i64)>>::from((x as i64, y as i64))
+        Point::from((x as i64, y as i64))
     }
 }
