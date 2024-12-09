@@ -1,10 +1,10 @@
-use std::ops::{Add, Sub};
 use crate::{forward_ref_binop, impl_ops_ref_copy};
+use std::ops::{Add, Sub};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Point {
     pub x: i64,
-    pub y: i64
+    pub y: i64,
 }
 
 impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {

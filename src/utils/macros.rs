@@ -31,7 +31,7 @@ macro_rules! forward_ref_binop {
                 $imp::$method(&self, other)
             }
         }
-    }
+    };
 }
 
 /**
