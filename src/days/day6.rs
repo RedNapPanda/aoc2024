@@ -1,8 +1,8 @@
-use itertools::Itertools;
-use std::collections::HashSet;
 use crate::utils::grid::Grid;
 use crate::utils::point::Point;
 use crate::utils::traits::Contains;
+use itertools::Itertools;
+use std::collections::HashSet;
 
 pub fn solve1(lines: &Vec<String>) -> i64 {
     let (grid, start) = Grid::with_start(lines);
@@ -34,9 +34,9 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
 
 fn rot90_point(pos: Point) -> Point {
     match pos {
-        Point { x: 0, y: 1 } =>  Point { x: 1, y: 0 },
+        Point { x: 0, y: 1 } => Point { x: 1, y: 0 },
         Point { x: 0, y: -1 } => Point { x: -1, y: 0 },
-        Point { x: 1, y:  0 } => Point { x: 0, y: -1 },
+        Point { x: 1, y: 0 } => Point { x: 0, y: -1 },
         Point { x: -1, y: 0 } => Point { x: 0, y: 1 },
         _ => unreachable!(),
     }
@@ -45,7 +45,8 @@ fn rot90_point(pos: Point) -> Point {
 impl Grid<char> {
     fn with_start(lines: &Vec<String>) -> (Self, Point) {
         let grid = &Grid::from(lines);
-        let start = grid.iter_enumerate()
+        let start = grid
+            .iter_enumerate()
             .find(|&(_, c)| c == '^')
             .map(|(p, _)| p)
             .unwrap();
@@ -66,8 +67,8 @@ impl Grid<char> {
                 }
                 seen.insert((fast.clone(), fast_dir.clone()));
                 let fast_next = &fast + &fast_dir;
-                if self.contains(&fast_next) &&
-                     self[fast_next.x as usize][fast_next.y as usize] == '#'
+                if self.contains(&fast_next)
+                    && self[fast_next.x as usize][fast_next.y as usize] == '#'
                 {
                     fast_dir = rot90_point(fast_dir);
                     continue;

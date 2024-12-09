@@ -1,6 +1,6 @@
 use crate::utils::grid::Grid;
-use itertools::Itertools;
 use crate::utils::traits::Contains;
+use itertools::Itertools;
 
 pub fn solve1(lines: &Vec<String>) -> i64 {
     count_nodes(lines, false)
