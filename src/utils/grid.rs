@@ -1,6 +1,6 @@
 use crate::utils::point::Point;
 use crate::utils::traits::Contains;
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 use std::slice::Iter;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -68,10 +68,16 @@ impl From<&Vec<String>> for Grid<char> {
     }
 }
 
-impl<'a, T: Copy> Index<usize> for &'a Grid<T> {
+impl<T: Copy> Index<usize> for Grid<T> {
     type Output = Vec<T>;
 
-    fn index(&self, index: usize) -> &'a Self::Output {
+    fn index(&self, index: usize) -> &Self::Output {
         &self.rows[index]
+    }
+}
+
+impl<T: Copy> IndexMut<usize> for Grid<T> {
+    fn index_mut(&mut self, index: usize) -> &mut Vec<T> {
+        &mut self.rows[index]
     }
 }

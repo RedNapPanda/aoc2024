@@ -1,5 +1,4 @@
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
 use itertools::Itertools;
 use crate::utils::traits::Contains;
 
@@ -55,8 +54,4 @@ fn count_nodes(lines: &Vec<String>, part2: bool) -> i64 {
         .flatten()
         .unique()
         .count() as i64
-}
-
-fn is_valid(node: &Point, height: i64, width: i64) -> bool {
-    node.x >= 0 && node.x < height && node.y >= 0 && node.y < width
 }
