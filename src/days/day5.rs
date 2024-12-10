@@ -1,12 +1,13 @@
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
+use itertools::Itertools;
 
 pub fn solve1(lines: &Vec<String>) -> i64 {
     let (graph, updates) = build_graph(lines);
     let mut seen = HashSet::<&str>::new();
     updates
         .iter()
-        .map(|update| update.split(",").collect::<Vec<_>>())
+        .map(|update| update.split(",").collect_vec())
         .filter(|update| is_valid(update, &graph, &mut seen))
         .map(|update| update[update.len() / 2].parse::<i64>().unwrap())
         .sum()
@@ -17,14 +18,13 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
     let mut seen = HashSet::<&str>::new();
     updates
         .iter()
-        .map(|update| update.split(",").collect::<Vec<_>>())
+        .map(|update| update.split(",").collect_vec())
         .filter(|update| !is_valid(update, &graph, &mut seen))
         .map(|mut update| {
             update.sort_unstable_by(|&a, &b| {
-                if graph.contains_key(a) && graph[a].contains(b) {
-                    Ordering::Less
-                } else {
-                    Ordering::Greater
+                match graph.contains_key(a) && graph[a].contains(b) {
+                    true => Ordering::Less,
+                    _ => Ordering::Greater
                 }
             });
             update[update.len() / 2].parse::<i64>().unwrap()

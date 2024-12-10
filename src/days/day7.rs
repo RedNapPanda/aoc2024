@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 pub fn solve1(lines: &Vec<String>) -> i64 {
     solve(lines, false)
 }
@@ -13,7 +15,7 @@ fn solve(lines: &Vec<String>, concat: bool) -> i64 {
             let split = line
                 .split(":")
                 .map(|split| split.trim())
-                .collect::<Vec<&str>>();
+                .collect_vec();
             let target = split[0].parse::<i64>().unwrap();
             let nums = split[1]
                 .split_whitespace()

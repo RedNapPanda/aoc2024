@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 fn fold_valid<'a, I>(v: i64, dir: bool, iter: I) -> bool
 where
     I: Iterator<Item = &'a i64>,
@@ -30,7 +32,7 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
         .map(|line| {
             line.split_whitespace()
                 .map(|s| s.parse::<i64>().unwrap())
-                .collect::<Vec<_>>()
+                .collect_vec()
         })
         .filter(|levels| {
             let iter = levels.into_iter().skip(1);
@@ -45,7 +47,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         .map(|line| {
             line.split_whitespace()
                 .map(|s| s.parse::<i64>().unwrap())
-                .collect::<Vec<_>>()
+                .collect_vec()
         })
         .filter(|levels| (0..levels.len()).any(|i| is_valid_skip(&levels, i)))
         .count() as i64

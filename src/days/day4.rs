@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 type Point = (i64, i64);
 
 const XMAS_ENUM: [XMAS; 8] = [
@@ -22,11 +24,11 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
                 .enumerate()
                 .filter(|&(_, c)| c == 'X')
                 .map(|(col, _)| (row as i64, col as i64))
-                .collect::<Vec<_>>();
+                .collect_vec();
             x_locs.extend_from_slice(_x_locs);
-            line.chars().collect::<Vec<_>>()
+            line.chars().collect_vec()
         })
-        .collect::<Vec<_>>();
+        .collect_vec();
     x_locs
         .into_iter()
         .map(|(row, col)| {
@@ -55,11 +57,11 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
                 .enumerate()
                 .filter(|&(_, c)| c == 'A')
                 .map(|(col, _)| (row as i64, col as i64))
-                .collect::<Vec<_>>();
+                .collect_vec();
             a_locs.extend_from_slice(_a_locs);
-            line.chars().collect::<Vec<_>>()
+            line.chars().collect_vec()
         })
-        .collect::<Vec<_>>();
+        .collect_vec();
     a_locs
         .into_iter()
         .filter(|&pos| {

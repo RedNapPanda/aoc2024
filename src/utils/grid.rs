@@ -2,6 +2,7 @@ use crate::utils::point::Point;
 use crate::utils::traits::Contains;
 use std::ops::{Index, IndexMut};
 use std::slice::Iter;
+use itertools::Itertools;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid<T>
@@ -29,7 +30,7 @@ impl<T: Copy> Grid<T> {
             .flatten()
             .enumerate()
             // reindex the flattened enumeration into Points on Grid
-            .map(|(i, &ref v)| (Point::from((i / self.height(), i % self.width())), *v))
+            .map(|(i, v)| (Point::from((i / self.height(), i % self.width())), *v))
     }
 }
 
@@ -62,8 +63,8 @@ impl From<&Vec<String>> for Grid<char> {
         Grid {
             rows: vec
                 .iter()
-                .map(|line| line.chars().collect::<Vec<_>>())
-                .collect::<Vec<_>>(),
+                .map(|line| line.chars().collect_vec())
+                .collect_vec(),
         }
     }
 }
