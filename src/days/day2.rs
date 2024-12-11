@@ -2,12 +2,11 @@ use itertools::Itertools;
 
 fn fold_valid<'a, I>(v: i64, dir: bool, iter: I) -> bool
 where
-    I: Iterator<Item = &'a i64>,
+    I: Iterator<Item=&'a i64>,
 {
     iter.fold((v, true), |(l, res), &r| {
         (r, res && l != r && (l < r) == dir && (l - r).abs() < 4)
-    })
-    .1
+    }).1
 }
 
 fn is_valid_skip(levels: &Vec<i64>, skip: usize) -> bool {

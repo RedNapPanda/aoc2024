@@ -25,7 +25,7 @@ impl<T: Copy> Grid<T> {
         self.rows.iter()
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item = (Point, T)> + '_ {
+    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Point, T)> + '_ {
         self.iter()
             .flatten()
             .enumerate()
