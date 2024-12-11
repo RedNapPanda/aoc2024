@@ -14,22 +14,22 @@ struct Opt {
     day: u8,
 }
 
-fn main() -> Result<()> {
+fn main() -> Result<()> {    
     color_eyre::install()?;
     let opt = Opt::from_args();
     let lines = input::read_input(opt.day);
-
+    
     let func1 = get_day_fn(opt.day, true);
     let time1 = Instant::now();
     let result1 = func1(&lines);
     let elapsed1 = time1.elapsed();
-    println!("P1: {:?} | {}", result1, time_str(&elapsed1));
-
+    println!("P1: {:?} in {:?}", result1,elapsed1);
+    
     let func2 = get_day_fn(opt.day, false);
     let time2 = Instant::now();
     let result2 = func2(&lines);
     let elapsed2 = time2.elapsed();
-    println!("P2: {:?} | {}", result2, time_str(&elapsed2));
+    println!("P2: {:?} in {:?}", result2, elapsed2);
 
     Ok(())
 }
@@ -59,26 +59,5 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&[String]) -> i64 {
         11 if part1 => day11::solve1,
         11 => day11::solve2,
         _ => panic!("Invalid day"),
-    }
-}
-
-fn time_str(elasped: &Duration) -> String {
-    let mut time_elapsed = elasped.as_micros();
-    let mut decimals = 0;
-    let mut suffix = "µs";
-    if time_elapsed > 1000 {
-        decimals = time_elapsed % 1000;
-        time_elapsed = elasped.as_millis();
-        suffix = "ms"
-    }
-    if time_elapsed > 1000 {
-        decimals = time_elapsed % 1000;
-        time_elapsed = elasped.as_secs() as u128;
-        suffix = "s"
-    }
-    if decimals > 0 {
-        format!("{:?}.{}{}", time_elapsed, decimals, suffix)
-    } else {
-        format!("{:?}{}", time_elapsed, suffix)
     }
 }
