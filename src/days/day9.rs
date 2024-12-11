@@ -21,7 +21,8 @@ pub fn solve1(lines: &[String]) -> i64 {
 pub fn solve2(lines: &[String]) -> i64 {
     let mut files = files(lines);
 
-    let chunks = files.iter()
+    let chunks = files
+        .iter()
         .enumerate()
         .chunk_by(|&(_, &x)| x)
         .into_iter()
@@ -29,11 +30,11 @@ pub fn solve2(lines: &[String]) -> i64 {
             usize::MAX => None,
             _ => {
                 if let Some((idx, _)) = chunk.next() {
-                    Some((idx, chunk.count()+1))
+                    Some((idx, chunk.count() + 1))
                 } else {
                     None
                 }
-            },
+            }
         })
         .collect_vec();
 

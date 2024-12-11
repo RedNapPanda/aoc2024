@@ -30,7 +30,7 @@ impl<T> Grid<T> {
             false => None,
         }
     }
-    
+
     pub fn height(&self) -> usize {
         self.rows.len()
     }
@@ -48,12 +48,7 @@ impl<T> Grid<T> {
             .flatten()
             .enumerate()
             // reindex the flattened enumeration into Points on Grid
-            .map(|(i, v)| {
-                (
-                    Point::from((i / self.height(), i % self.width())),
-                    v,
-                )
-            })
+            .map(|(i, v)| (Point::from((i / self.height(), i % self.width())), v))
     }
 }
 
@@ -94,7 +89,6 @@ impl<T> IndexMut<usize> for Grid<T> {
         &mut self.rows[index]
     }
 }
-
 
 impl From<&[String]> for Grid<char> {
     fn from(vec: &[String]) -> Grid<char> {

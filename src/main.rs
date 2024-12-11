@@ -3,7 +3,7 @@ mod utils;
 
 use crate::utils::input;
 use color_eyre::eyre::Result;
-use days::{day1, day2, day3, day4, day5, day6, day7, day8, day9, day10, day11};
+use days::{day1, day10, day11, day2, day3, day4, day5, day6, day7, day8, day9};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
 
@@ -14,17 +14,17 @@ struct Opt {
     day: u8,
 }
 
-fn main() -> Result<()> {    
+fn main() -> Result<()> {
     color_eyre::install()?;
     let opt = Opt::from_args();
     let lines = input::read_input(opt.day);
-    
+
     let func1 = get_day_fn(opt.day, true);
     let time1 = Instant::now();
     let result1 = func1(&lines);
     let elapsed1 = time1.elapsed();
-    println!("P1: {:?} in {:?}", result1,elapsed1);
-    
+    println!("P1: {:?} in {:?}", result1, elapsed1);
+
     let func2 = get_day_fn(opt.day, false);
     let time2 = Instant::now();
     let result2 = func2(&lines);

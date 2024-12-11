@@ -15,13 +15,13 @@ pub fn solve1(lines: &[String]) -> i64 {
             stack.push(trail_head.clone());
             while let Some(pos) = stack.pop() {
                 if seen.contains(&pos) {
-                    continue
+                    continue;
                 }
                 let cur = *grid.get(&pos).unwrap_or(&0);
                 seen.insert(pos.clone());
                 if cur == 9 {
                     count += 1;
-                    continue
+                    continue;
                 }
                 walk(&grid, &mut stack, pos, cur);
             }
@@ -43,7 +43,7 @@ pub fn solve2(lines: &[String]) -> i64 {
                 let prev = *grid.get(&pos).unwrap_or(&0);
                 if prev == 9 {
                     count += 1;
-                    continue
+                    continue;
                 }
                 walk(&grid, &mut stack, pos, prev);
             }
@@ -53,8 +53,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 }
 
 fn get_trail_heads(grid: &Grid<usize>) -> Vec<Point> {
-    grid
-        .iter_enumerate()
+    grid.iter_enumerate()
         .filter_map(|(p, x)| match x {
             0 => Some(p),
             _ => None,

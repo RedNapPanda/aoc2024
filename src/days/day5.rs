@@ -1,6 +1,6 @@
+use itertools::Itertools;
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
-use itertools::Itertools;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let (graph, updates) = build_graph(lines);
@@ -21,12 +21,12 @@ pub fn solve2(lines: &[String]) -> i64 {
         .map(|update| update.split(",").collect_vec())
         .filter(|update| !is_valid(update, &graph, &mut seen))
         .map(|mut update| {
-            update.sort_unstable_by(|&a, &b| {
-                match graph.contains_key(a) && graph[a].contains(b) {
+            update.sort_unstable_by(
+                |&a, &b| match graph.contains_key(a) && graph[a].contains(b) {
                     true => Ordering::Less,
-                    _ => Ordering::Greater
-                }
-            });
+                    _ => Ordering::Greater,
+                },
+            );
             update[update.len() / 2].parse::<i64>().unwrap()
         })
         .sum()
