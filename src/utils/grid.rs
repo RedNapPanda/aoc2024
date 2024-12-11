@@ -1,40 +1,63 @@
 use crate::utils::point::Point;
 use crate::utils::traits::Contains;
+use itertools::Itertools;
+use std::fmt::{Display, Formatter};
 use std::ops::{Index, IndexMut};
 use std::slice::Iter;
-use itertools::Itertools;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Grid<T>
-where
-    T: Copy,
-{
+pub struct Grid<T> {
     pub rows: Vec<Vec<T>>,
 }
 
-impl<T: Copy> Grid<T> {
+impl<T> Display for Grid<T>
+where
+    T: Display + std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut res = Ok(());
+        for row in &self.rows {
+            res = res.and_then(|_| writeln!(f, "{:?}", row));
+        }
+        res
+    }
+}
+
+impl<T> Grid<T> {
+    pub fn get(&self, point: &Point) -> Option<&T> {
+        match self.contains(point) {
+            true => Some(&self.rows[point.x as usize][point.y as usize]),
+            false => None,
+        }
+    }
+    
     pub fn height(&self) -> usize {
         self.rows.len()
     }
 
     pub fn width(&self) -> usize {
-        self.rows.get(0).map_or(0, |r| r.len())
+        self.rows.first().map_or(0, |r| r.len())
     }
 
     pub fn iter(&self) -> Iter<'_, Vec<T>> {
         self.rows.iter()
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Point, T)> + '_ {
+    pub fn iter_enumerate(&self) -> impl Iterator<Item = (Point, &T)> + '_ {
         self.iter()
             .flatten()
             .enumerate()
             // reindex the flattened enumeration into Points on Grid
-            .map(|(i, v)| (Point::from((i / self.height(), i % self.width())), *v))
+            .map(|(i, v)| {
+                (
+                    Point::from((i / self.height(), i % self.width())),
+                    v,
+                )
+            })
     }
 }
 
-impl<T: Copy> IntoIterator for Grid<T> {
+impl<T> IntoIterator for Grid<T> {
     type Item = Vec<T>;
     type IntoIter = std::vec::IntoIter<Vec<T>>;
 
@@ -43,7 +66,7 @@ impl<T: Copy> IntoIterator for Grid<T> {
     }
 }
 
-impl<T: Copy> Contains<&Point> for Grid<T> {
+impl<T> Contains<&Point> for Grid<T> {
     fn contains(&self, other: &Point) -> bool {
         other.x >= 0
             && other.x < self.height() as i64
@@ -52,14 +75,29 @@ impl<T: Copy> Contains<&Point> for Grid<T> {
     }
 }
 
-impl<T: Copy> Contains<(i64, i64)> for Grid<T> {
+impl<T> Contains<(i64, i64)> for Grid<T> {
     fn contains(&self, other: (i64, i64)) -> bool {
         self.contains(&Point::from(other))
     }
 }
 
-impl From<&Vec<String>> for Grid<char> {
-    fn from(vec: &Vec<String>) -> Grid<char> {
+impl<T> Index<usize> for Grid<T> {
+    type Output = Vec<T>;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.rows[index]
+    }
+}
+
+impl<T> IndexMut<usize> for Grid<T> {
+    fn index_mut(&mut self, index: usize) -> &mut Vec<T> {
+        &mut self.rows[index]
+    }
+}
+
+
+impl From<&[String]> for Grid<char> {
+    fn from(vec: &[String]) -> Grid<char> {
         Grid {
             rows: vec
                 .iter()
@@ -69,16 +107,17 @@ impl From<&Vec<String>> for Grid<char> {
     }
 }
 
-impl<T: Copy> Index<usize> for Grid<T> {
-    type Output = Vec<T>;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.rows[index]
-    }
-}
-
-impl<T: Copy> IndexMut<usize> for Grid<T> {
-    fn index_mut(&mut self, index: usize) -> &mut Vec<T> {
-        &mut self.rows[index]
+impl From<&[String]> for Grid<usize> {
+    fn from(vec: &[String]) -> Grid<usize> {
+        Grid {
+            rows: vec
+                .iter()
+                .map(|line| {
+                    line.chars()
+                        .flat_map(|c| c.to_digit(10).map(|c| c as usize))
+                        .collect_vec()
+                })
+                .collect_vec(),
+        }
     }
 }

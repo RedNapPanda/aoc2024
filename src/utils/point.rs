@@ -7,6 +7,57 @@ pub struct Point {
     pub y: i64,
 }
 
+impl Point {
+    pub fn left(&self) -> Point {
+        Point {
+            x: self.x,
+            y: self.y - 1,
+        }
+    }
+    pub fn right(&self) -> Point {
+        Point {
+            x: self.x,
+            y: self.y + 1,
+        }
+    }
+    pub fn down(&self) -> Point {
+        Point {
+            x: self.x + 1,
+            y: self.y,
+        }
+    }
+    pub fn up(&self) -> Point {
+        Point {
+            x: self.x - 1,
+            y: self.y,
+        }
+    }
+    pub fn left_down(&self) -> Point {
+        Point {
+            x: self.x + 1,
+            y: self.y - 1,
+        }
+    }
+    pub fn left_up(&self) -> Point {
+        Point {
+            x: self.x - 1,
+            y: self.y - 1,
+        }
+    }
+    pub fn right_down(&self) -> Point {
+        Point {
+            x: self.x + 1,
+            y: self.y + 1,
+        }
+    }
+    pub fn right_up(&self) -> Point {
+        Point {
+            x: self.x - 1,
+            y: self.y + 1,
+        }
+    }
+}
+
 impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {
     x: p.x + other.x,
     y: p.y + other.y

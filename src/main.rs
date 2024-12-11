@@ -3,12 +3,12 @@ mod utils;
 
 use crate::utils::input;
 use color_eyre::eyre::Result;
-use days::{day1, day2, day3, day4, day5, day6, day7, day8, day9};
+use days::{day1, day2, day3, day4, day5, day6, day7, day8, day9, day10, day11};
 use std::time::{Duration, Instant};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "aoc 2024")]
+#[structopt(name = "aoc")]
 struct Opt {
     #[structopt(short, long)]
     day: u8,
@@ -34,7 +34,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
+fn get_day_fn(day: u8, part1: bool) -> impl Fn(&[String]) -> i64 {
     match day {
         1 if part1 => day1::solve1,
         1 => day1::solve2,
@@ -54,6 +54,10 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&Vec<String>) -> i64 {
         8 => day8::solve2,
         9 if part1 => day9::solve1,
         9 => day9::solve2,
+        10 if part1 => day10::solve1,
+        10 => day10::solve2,
+        11 if part1 => day11::solve1,
+        11 => day11::solve2,
         _ => panic!("Invalid day"),
     }
 }

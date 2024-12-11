@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     let mut files = files(lines);
 
     let mut right = files.len() - 1;
@@ -18,9 +18,9 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
     sum(files)
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     let mut files = files(lines);
-    
+
     let chunks = files.iter()
         .enumerate()
         .chunk_by(|&(_, &x)| x)
@@ -36,7 +36,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
             },
         })
         .collect_vec();
-    
+
     for i in (0..chunks.len()).rev() {
         let (idx, file_len) = chunks[i];
         let mut width = 0;
@@ -64,7 +64,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
     sum(files)
 }
 
-fn files(lines: &Vec<String>) -> Vec<usize> {
+fn files(lines: &[String]) -> Vec<usize> {
     lines
         .first()
         .unwrap_or(&String::from(""))

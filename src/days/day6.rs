@@ -4,7 +4,7 @@ use crate::utils::traits::Contains;
 use itertools::Itertools;
 use std::collections::HashSet;
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     let (grid, start) = Grid::with_start(lines);
     grid.walk(start)
         .0
@@ -14,7 +14,7 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
         .count() as i64
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     let (grid, start) = &mut Grid::with_start(lines);
     grid.walk(start.clone())
         .0
@@ -43,11 +43,11 @@ fn rot90_point(pos: Point) -> Point {
 }
 
 impl Grid<char> {
-    fn with_start(lines: &Vec<String>) -> (Self, Point) {
+    fn with_start(lines: &[String]) -> (Self, Point) {
         let grid = &Grid::from(lines);
         let start = grid
             .iter_enumerate()
-            .find(|&(_, c)| c == '^')
+            .find(|(_, &c)| c == '^')
             .map(|(p, _)| p)
             .unwrap();
         (grid.clone(), start)

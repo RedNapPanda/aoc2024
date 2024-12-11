@@ -2,21 +2,21 @@ use itertools::Itertools;
 
 type Point = (i64, i64);
 
-const XMAS_ENUM: [XMAS; 8] = [
-    XMAS::Right,
-    XMAS::Left,
-    XMAS::Down,
-    XMAS::Up,
-    XMAS::RightDown,
-    XMAS::RightUp,
-    XMAS::LeftDown,
-    XMAS::LeftUp,
+const XMAS_ENUM: [Xmas; 8] = [
+    Xmas::Right,
+    Xmas::Left,
+    Xmas::Down,
+    Xmas::Up,
+    Xmas::RightDown,
+    Xmas::RightUp,
+    Xmas::LeftDown,
+    Xmas::LeftUp,
 ];
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     let mut x_locs = Vec::new();
     let graph = &lines
-        .into_iter()
+        .iter()
         .enumerate()
         .map(|(row, line)| {
             let _x_locs = &line
@@ -46,10 +46,10 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
         .sum()
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     let mut a_locs = Vec::new();
     let graph = &lines
-        .into_iter()
+        .iter()
         .enumerate()
         .map(|(row, line)| {
             let _a_locs = &line
@@ -65,10 +65,10 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
     a_locs
         .into_iter()
         .filter(|&pos| {
-            let left_down = XMAS::LeftDown.point(pos);
-            let left_up = XMAS::LeftUp.point(pos);
-            let right_down = XMAS::RightDown.point(pos);
-            let right_up = XMAS::RightUp.point(pos);
+            let left_down = Xmas::LeftDown.point(pos);
+            let left_up = Xmas::LeftUp.point(pos);
+            let right_down = Xmas::RightDown.point(pos);
+            let right_up = Xmas::RightUp.point(pos);
 
             if !inbound(graph, left_down)
                 || !inbound(graph, left_up)
@@ -91,12 +91,12 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         .count() as i64
 }
 
-fn inbound(graph: &Vec<Vec<char>>, pos: Point) -> bool {
+fn inbound(graph: &[Vec<char>], pos: Point) -> bool {
     let (row, col) = pos;
     row >= 0 && row < graph.len() as i64 && col >= 0 && col < graph[0].len() as i64
 }
 
-enum XMAS {
+enum Xmas {
     Right,
     Left,
     Down,
@@ -107,28 +107,28 @@ enum XMAS {
     LeftUp,
 }
 
-impl XMAS {
+impl Xmas {
     fn point(&self, pos: Point) -> Point {
         let (row, col) = pos;
         match self {
-            XMAS::LeftDown => (row - 1, col + 1),
-            XMAS::LeftUp => (row - 1, col - 1),
-            XMAS::RightDown => (row + 1, col + 1),
-            XMAS::RightUp => (row + 1, col - 1),
+            Xmas::LeftDown => (row - 1, col + 1),
+            Xmas::LeftUp => (row - 1, col - 1),
+            Xmas::RightDown => (row + 1, col + 1),
+            Xmas::RightUp => (row + 1, col - 1),
             _ => (row, col),
         }
     }
 
     fn shift(&self) -> (Point, Point, Point) {
         match self {
-            XMAS::Right => ((0, 1), (0, 2), (0, 3)),
-            XMAS::Left => ((0, -1), (0, -2), (0, -3)),
-            XMAS::Down => ((1, 0), (2, 0), (3, 0)),
-            XMAS::Up => ((-1, 0), (-2, 0), (-3, 0)),
-            XMAS::LeftDown => ((1, -1), (2, -2), (3, -3)),
-            XMAS::LeftUp => ((-1, -1), (-2, -2), (-3, -3)),
-            XMAS::RightDown => ((1, 1), (2, 2), (3, 3)),
-            XMAS::RightUp => ((-1, 1), (-2, 2), (-3, 3)),
+            Xmas::Right => ((0, 1), (0, 2), (0, 3)),
+            Xmas::Left => ((0, -1), (0, -2), (0, -3)),
+            Xmas::Down => ((1, 0), (2, 0), (3, 0)),
+            Xmas::Up => ((-1, 0), (-2, 0), (-3, 0)),
+            Xmas::LeftDown => ((1, -1), (2, -2), (3, -3)),
+            Xmas::LeftUp => ((-1, -1), (-2, -2), (-3, -3)),
+            Xmas::RightDown => ((1, 1), (2, 2), (3, 3)),
+            Xmas::RightUp => ((-1, 1), (-2, 2), (-3, 3)),
         }
     }
 }

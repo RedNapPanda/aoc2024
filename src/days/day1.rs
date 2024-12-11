@@ -1,9 +1,9 @@
 use std::cmp;
 use std::collections::HashMap;
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     let (mut l_list, mut r_list): (Vec<_>, Vec<_>) = lines
-        .into_iter()
+        .iter()
         .map(|line| line.split_once("   ").unwrap())
         .map(|(l, r)| (l.parse::<i64>().unwrap(), r.parse::<i64>().unwrap()))
         .unzip();
@@ -11,15 +11,15 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
     r_list.sort_unstable();
     l_list
         .into_iter()
-        .zip(r_list.into_iter())
+        .zip(r_list)
         .map(|(l, r)| cmp::max(l, r) - cmp::min(l, r))
         .sum()
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     let mut count_map = HashMap::<i64, (bool, i64)>::new();
     lines
-        .into_iter()
+        .iter()
         .map(|line| line.split_once("   ").unwrap())
         .map(|(l, r)| (l.parse::<i64>().unwrap(), r.parse::<i64>().unwrap()))
         .for_each(|(l, r)| {

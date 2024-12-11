@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use itertools::Itertools;
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     let (graph, updates) = build_graph(lines);
     let mut seen = HashSet::<&str>::new();
     updates
@@ -13,7 +13,7 @@ pub fn solve1(lines: &Vec<String>) -> i64 {
         .sum()
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     let (graph, updates) = build_graph(lines);
     let mut seen = HashSet::<&str>::new();
     updates
@@ -32,7 +32,7 @@ pub fn solve2(lines: &Vec<String>) -> i64 {
         .sum()
 }
 
-fn build_graph(lines: &Vec<String>) -> (HashMap<&str, HashSet<&str>>, Vec<String>) {
+fn build_graph(lines: &[String]) -> (HashMap<&str, HashSet<&str>>, Vec<String>) {
     let break_line = lines.iter().position(|l| l.is_empty()).unwrap();
     let mut graph = HashMap::new();
     lines[..break_line]

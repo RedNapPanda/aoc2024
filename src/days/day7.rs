@@ -1,14 +1,14 @@
 use itertools::Itertools;
 
-pub fn solve1(lines: &Vec<String>) -> i64 {
+pub fn solve1(lines: &[String]) -> i64 {
     solve(lines, false)
 }
 
-pub fn solve2(lines: &Vec<String>) -> i64 {
+pub fn solve2(lines: &[String]) -> i64 {
     solve(lines, true)
 }
 
-fn solve(lines: &Vec<String>, concat: bool) -> i64 {
+fn solve(lines: &[String], concat: bool) -> i64 {
     lines
         .iter()
         .map(|line| {
