@@ -32,25 +32,25 @@ impl Point {
             y: self.y,
         }
     }
-    pub fn left_down(&self) -> Point {
+    pub fn down_left(&self) -> Point {
         Point {
             x: self.x + 1,
             y: self.y - 1,
         }
     }
-    pub fn left_up(&self) -> Point {
+    pub fn up_left(&self) -> Point {
         Point {
             x: self.x - 1,
             y: self.y - 1,
         }
     }
-    pub fn right_down(&self) -> Point {
+    pub fn down_right(&self) -> Point {
         Point {
             x: self.x + 1,
             y: self.y + 1,
         }
     }
-    pub fn right_up(&self) -> Point {
+    pub fn up_right(&self) -> Point {
         Point {
             x: self.x - 1,
             y: self.y + 1,
@@ -63,9 +63,19 @@ impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {
     y: p.y + other.y
 });
 
+impl_ops_ref_copy!(Add, add |p: Point, other: (i64, i64)| Point {
+    x: p.x + other.0,
+    y: p.y + other.1
+});
+
 impl_ops_ref_copy!(Sub, sub |p: Point, other: Point| Point {
     x: p.x - other.x,
     y: p.y - other.y
+});
+
+impl_ops_ref_copy!(Sub, sub |p: Point, other: (i64, i64)| Point {
+    x: p.x - other.0,
+    y: p.y - other.1
 });
 
 impl From<(i64, i64)> for Point {
