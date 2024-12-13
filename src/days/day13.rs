@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use crate::utils::point::Point;
 use itertools::Itertools;
 use regex::Regex;
@@ -12,11 +13,39 @@ struct ClawMachine {
 pub fn solve1(lines: &[String]) -> i64 {
     let claw_machines = claw_machines(lines);
     cramer(&claw_machines, 0)
+/*
+1.7143106s vs cramer at  13.4721ms
+    claw_machines
+        .iter()
+        .map(|machine| {
+            let seen = &mut HashSet::new();
+            _dfs(machine, 0, 0, seen)
+        })
+        .filter(|&x| x != i64::MAX)
+        .sum()
+ */
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
     let claw_machines = claw_machines(lines);
     cramer(&claw_machines, 10_000_000_000_000)
+}
+
+fn _dfs(machine: &ClawMachine, a_count: i64, b_count: i64, seen: &mut HashSet<(i64, i64)>) -> i64 {
+    if !seen.insert((a_count, b_count)) {
+        return i64::MAX
+    }
+    let px = machine.a_button.x * a_count + machine.b_button.x * b_count;
+    let py = machine.a_button.y * a_count + machine.b_button.y * b_count;
+    if px == machine.prize.x && py == machine.prize.y {
+        return a_count * 3 + b_count
+    }
+    if a_count > 100 || b_count > 100 || px > machine.prize.x || py > machine.prize.y {
+        return i64::MAX
+    }
+    let a_tokens = _dfs(machine, a_count+1, b_count, seen);
+    let b_tokens = _dfs(machine, a_count, b_count+1, seen);
+    a_tokens.min(b_tokens)
 }
 
 fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
