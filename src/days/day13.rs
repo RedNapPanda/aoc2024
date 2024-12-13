@@ -71,16 +71,16 @@ fn cramer(claw_machines: &[ClawMachine], shift: i64) -> i64 {
     claw_machines
         .iter()
         .map(|machine| {
-            let x = machine.prize.x + shift;
-            let y = machine.prize.y + shift;
+            let px = machine.prize.x + shift;
+            let py = machine.prize.y + shift;
             let a = &machine.a_button;
             let b = &machine.b_button;
-            let div = a.x * b.y - a.y * b.x;
-            let a_count = (x * b.y - y * b.x) / div;
-            let b_count = (y * a.x - x * a.y) / div;
-            let px = a.x * a_count + b.x * b_count;
-            let py = a.y * a_count + b.y * b_count;
-            if x != px || y != py {
+            let det = a.x * b.y - a.y * b.x; // determinant of matrix
+            let a_count = (px * b.y - py * b.x) / det;
+            let b_count = (py * a.x - px * a.y) / det;
+            let x = a.x * a_count + b.x * b_count;
+            let y = a.y * a_count + b.y * b_count;
+            if px != x || py != y {
                 return 0
             }
             3 * a_count + b_count
