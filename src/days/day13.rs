@@ -11,21 +11,7 @@ struct ClawMachine {
 
 pub fn solve1(lines: &[String]) -> i64 {
     let claw_machines = claw_machines(lines);
-    claw_machines
-        .iter()
-        .map(|machine| {
-            let a = &machine.a_button;
-            let b = &machine.b_button;
-            let p = &machine.prize;
-            let num = p.x * b.y - p.y * b.x;
-            let div = a.x * b.y - a.y * b.x;
-            if num % div == 0 { // (prize x b) / (a x b) == (a * ai) + (b * bi)
-                let a_count = num / div;
-                let b_count = (p.x - a.x * a_count) / b.x;
-                return a_count * 3 + b_count
-            }
-            0
-        }).sum()
+    cramer(&claw_machines, 0)
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
@@ -65,24 +51,27 @@ fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
 }
 
 /*
-|ax bx||x|=|px|
-|ay by||y|=|py|
+Cramer's
+|ax bx||a_count| = |x|
+|ay by||b_count| = |y|
 */
 fn cramer(claw_machines: &[ClawMachine], shift: i64) -> i64 {
     claw_machines
         .iter()
         .map(|machine| {
-            let px = machine.prize.x + shift;
-            let py = machine.prize.y + shift;
+            let x = machine.prize.x + shift;
+            let y = machine.prize.y + shift;
             let a = &machine.a_button;
             let b = &machine.b_button;
             let div = a.x * b.y - a.y * b.x;
-            let x = (px * b.y - py * b.x) / div;
-            let y = (py * a.x - px * a.y) / div;
-            if x * a.x + y * b.x == px && x * a.y + y * b.y == py {
-                return x * 3 + y;
+            let a_count = (x * b.y - y * b.x) / div;
+            let b_count = (y * a.x - x * a.y) / div;
+            let px = a.x * a_count + b.x * b_count;
+            let py = a.y * a_count + b.y * b_count;
+            if x != px || y != py {
+                return 0
             }
-            0
+            3 * a_count + b_count
         })
         .sum()
 }
