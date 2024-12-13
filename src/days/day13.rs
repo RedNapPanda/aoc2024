@@ -1,8 +1,7 @@
-use std::cmp;
-use std::collections::HashSet;
 use crate::utils::point::Point;
 use itertools::Itertools;
 use regex::Regex;
+use std::collections::HashSet;
 
 #[derive(Debug, Clone)]
 struct ClawMachine {
@@ -14,16 +13,16 @@ struct ClawMachine {
 pub fn solve1(lines: &[String]) -> i64 {
     let claw_machines = claw_machines(lines);
     cramer(&claw_machines, 0)
-/*
-~120x slower than cramer's rule
-    claw_machines
-        .iter()
-        .flat_map(|machine| {
-            let seen = &mut HashSet::new();
-            _dfs(machine, 0, 0, seen)
-        })
-        .sum()
- */
+    /*
+    ~120x slower than cramer's rule
+        claw_machines
+            .iter()
+            .flat_map(|machine| {
+                let seen = &mut HashSet::new();
+                _dfs(machine, 0, 0, seen)
+            })
+            .sum()
+     */
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
@@ -81,26 +80,31 @@ fn cramer(claw_machines: &[ClawMachine], shift: i64) -> i64 {
             let x = a.x * a_count + b.x * b_count;
             let y = a.y * a_count + b.y * b_count;
             if px != x || py != y {
-                return 0
+                return 0;
             }
             3 * a_count + b_count
         })
         .sum()
 }
 
-fn _dfs(machine: &ClawMachine, a_count: i64, b_count: i64, seen: &mut HashSet<(i64, i64)>) -> Option<i64> {
+fn _dfs(
+    machine: &ClawMachine,
+    a_count: i64,
+    b_count: i64,
+    seen: &mut HashSet<(i64, i64)>,
+) -> Option<i64> {
     if !seen.insert((a_count, b_count)) {
-        return None
+        return None;
     }
     let px = machine.a_button.x * a_count + machine.b_button.x * b_count;
     let py = machine.a_button.y * a_count + machine.b_button.y * b_count;
     if px == machine.prize.x && py == machine.prize.y {
-        return Some(a_count * 3 + b_count)
+        return Some(a_count * 3 + b_count);
     }
     if a_count > 100 || b_count > 100 || px > machine.prize.x || py > machine.prize.y {
-        return None
+        return None;
     }
-    let a_tokens = _dfs(machine, a_count+1, b_count, seen);
-    let b_tokens = _dfs(machine, a_count, b_count+1, seen);
+    let a_tokens = _dfs(machine, a_count + 1, b_count, seen);
+    let b_tokens = _dfs(machine, a_count, b_count + 1, seen);
     a_tokens.or(b_tokens).min(b_tokens.or(a_tokens))
 }

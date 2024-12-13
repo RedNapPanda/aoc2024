@@ -31,16 +31,18 @@ pub fn solve2(lines: &[String]) -> i64 {
             let corners = plot
                 .iter()
                 .map(|pos| {
-                    (0..4).filter(|&i| {
-                        let dir = DIRECTIONS[i];
-                        let next_dir = DIRECTIONS.get(i + 1).unwrap_or(&DIRECTIONS[0]);
-                        if grid.get(&(pos + dir)).is_some_and(is_plant) {
-                            return false;
-                        }
-                        let transposed = grid.get(&(pos + next_dir)).is_none_or(is_not_plant);
-                        let corner = grid.get(&(pos + dir + next_dir)).is_some_and(is_plant);
-                        transposed || corner
-                    }).count() as i64
+                    (0..4)
+                        .filter(|&i| {
+                            let dir = DIRECTIONS[i];
+                            let next_dir = DIRECTIONS.get(i + 1).unwrap_or(&DIRECTIONS[0]);
+                            if grid.get(&(pos + dir)).is_some_and(is_plant) {
+                                return false;
+                            }
+                            let transposed = grid.get(&(pos + next_dir)).is_none_or(is_not_plant);
+                            let corner = grid.get(&(pos + dir + next_dir)).is_some_and(is_plant);
+                            transposed || corner
+                        })
+                        .count() as i64
                 })
                 .sum::<i64>();
             corners * area
@@ -61,13 +63,7 @@ fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Point>)> {
             continue;
         }
         seen.extend(area.clone());
-        plots.push((
-            count,
-            area.iter()
-                .cloned()
-                .unique()
-                .collect_vec(),
-        ));
+        plots.push((count, area.iter().cloned().unique().collect_vec()));
     }
     plots
 }
@@ -76,14 +72,17 @@ fn dfs(grid: &Grid<char>, plant: char, pos: Point, area: &mut HashSet<Point>) ->
     match grid.get(&pos) {
         Some(&plot) if plot == plant => {
             area.insert(pos.clone());
-            DIRECTIONS.iter()
+            DIRECTIONS
+                .iter()
                 .map(|dir| {
                     let pos = &pos + dir;
                     if area.contains(&pos) {
-                        return 0
+                        return 0;
                     }
                     dfs(grid, plant, pos, area)
-                }).sum::<i64>() + 1
+                })
+                .sum::<i64>()
+                + 1
         }
         _ => 0,
     }

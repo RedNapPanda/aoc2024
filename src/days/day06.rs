@@ -1,6 +1,5 @@
-use crate::utils::grid::Grid;
+use crate::utils::grid::{Contains, Grid};
 use crate::utils::point::Point;
-use crate::utils::traits::Contains;
 use itertools::Itertools;
 use std::collections::HashSet;
 

@@ -1,5 +1,4 @@
-use crate::utils::grid::Grid;
-use crate::utils::traits::Contains;
+use crate::utils::grid::{Contains, Grid};
 use itertools::Itertools;
 
 pub fn solve1(lines: &[String]) -> i64 {

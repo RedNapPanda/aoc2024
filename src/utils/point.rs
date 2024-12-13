@@ -7,7 +7,7 @@ pub struct Point {
     pub y: i64,
 }
 
-impl Point {    
+impl Point {
     pub fn left(&self) -> Self {
         Self {
             x: self.x,
@@ -62,6 +62,9 @@ impl From<(i64, i64)> for Point {
 
 impl From<(usize, usize)> for Point {
     fn from((x, y): (usize, usize)) -> Self {
-        Self { x: x as i64, y: y as i64 }
+        Self {
+            x: x as i64,
+            y: y as i64,
+        }
     }
 }

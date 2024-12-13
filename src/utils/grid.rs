@@ -1,5 +1,4 @@
 use crate::utils::point::Point;
-use crate::utils::traits::Contains;
 use itertools::Itertools;
 use std::fmt::{Display, Formatter};
 use std::ops::{Index, IndexMut};
@@ -30,7 +29,7 @@ impl<T> Grid<T> {
             false => None,
         }
     }
-    
+
     pub fn set(&mut self, point: &Point, value: T) {
         self.rows[point.x as usize][point.y as usize] = value;
     }
@@ -63,6 +62,10 @@ impl<T> IntoIterator for Grid<T> {
     fn into_iter(self) -> Self::IntoIter {
         self.rows.into_iter()
     }
+}
+
+pub trait Contains<T> {
+    fn contains(&self, other: T) -> bool;
 }
 
 impl<T> Contains<&Point> for Grid<T> {

@@ -7,7 +7,7 @@ pub fn read_input(day: u8) -> Vec<String> {
         ..10 => "0",
         _ => "",
     };
-    
+
     let path = Path::new("day_data").join(format!("day{}{}", zero, day));
     read_lines(&path)
 }
