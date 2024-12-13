@@ -66,7 +66,6 @@ fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Point>)> {
             area.iter()
                 .cloned()
                 .unique()
-                .sorted_unstable()
                 .collect_vec(),
         ));
     }
