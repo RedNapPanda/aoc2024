@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use std::collections::VecDeque;
 
 pub fn solve1(lines: &[String]) -> i64 {
     solve(lines, false)

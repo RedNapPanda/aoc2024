@@ -32,30 +32,6 @@ impl Point {
             y: self.y,
         }
     }
-    pub fn down_left(&self) -> Point {
-        Point {
-            x: self.x + 1,
-            y: self.y - 1,
-        }
-    }
-    pub fn up_left(&self) -> Point {
-        Point {
-            x: self.x - 1,
-            y: self.y - 1,
-        }
-    }
-    pub fn down_right(&self) -> Point {
-        Point {
-            x: self.x + 1,
-            y: self.y + 1,
-        }
-    }
-    pub fn up_right(&self) -> Point {
-        Point {
-            x: self.x - 1,
-            y: self.y + 1,
-        }
-    }
 }
 
 impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {

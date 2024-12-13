@@ -30,6 +30,10 @@ impl<T> Grid<T> {
             false => None,
         }
     }
+    
+    pub fn set(&mut self, point: &Point, value: T) {
+        self.rows[point.x as usize][point.y as usize] = value;
+    }
 
     pub fn height(&self) -> usize {
         self.rows.len()
