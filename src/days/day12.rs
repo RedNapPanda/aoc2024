@@ -10,10 +10,12 @@ pub fn solve1(lines: &[String]) -> i64 {
     plots(grid)
         .iter()
         .map(|(area, plot)| {
-            plot.iter()
+            let perimeter = plot
+                .iter()
                 .flat_map(|pos| DIRECTIONS.iter().map(move |&dir| pos + dir))
                 .filter(|pos| !plot.contains(pos))
-                .count() as i64 * area
+                .count() as i64;
+            perimeter * area
         })
         .sum()
 }
@@ -26,24 +28,24 @@ pub fn solve2(lines: &[String]) -> i64 {
             let plant = grid.get(&plot[0]).unwrap();
             let is_plant = |c: &char| c == plant;
             let is_not_plant = |c: &char| !is_plant(c);
-            plot.iter()
-                .flat_map(|pos| (0..4).map(|i| (pos.clone(), i)))
-                .filter(|(pos, i)| {
-                    let dir = DIRECTIONS[*i];
-                    let next_dir = if *i < 3 {
-                        DIRECTIONS[i + 1]
-                    } else {
-                        DIRECTIONS[0]
-                    };
-                    if grid.get(&(pos + dir)).is_some_and(is_plant) {
-                        return false
-                    }
-                    grid.get(&(pos + next_dir)).is_none_or(is_not_plant)
-                        || grid
-                        .get(&(pos + dir + next_dir))
-                        .is_some_and(is_plant)
-                }).count() as i64 * area
-        }).sum()
+            let corners = plot
+                .iter()
+                .map(|pos| {
+                    (0..4).filter(|&i| {
+                        let dir = DIRECTIONS[i];
+                        let next_dir = DIRECTIONS.get(i + 1).unwrap_or(&DIRECTIONS[0]);
+                        if grid.get(&(pos + dir)).is_some_and(is_plant) {
+                            return false;
+                        }
+                        let transposed = grid.get(&(pos + next_dir)).is_none_or(is_not_plant);
+                        let corner = grid.get(&(pos + dir + next_dir)).is_some_and(is_plant);
+                        transposed || corner
+                    }).count() as i64
+                })
+                .sum::<i64>();
+            corners * area
+        })
+        .sum()
 }
 
 fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Point>)> {
@@ -74,15 +76,15 @@ fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Point>)> {
 fn dfs(grid: &Grid<char>, plant: char, pos: Point, area: &mut HashSet<Point>) -> i64 {
     match grid.get(&pos) {
         Some(&plot) if plot == plant => {
-            let mut count = 1;
             area.insert(pos.clone());
-            for dir in DIRECTIONS {
-                let next = &pos + dir;
-                if !area.contains(&next) {
-                    count += dfs(grid, plant, next, area)
-                }
-            }
-            count
+            DIRECTIONS.iter()
+                .map(|dir| {
+                    let pos = &pos + dir;
+                    if area.contains(&pos) {
+                        return 0
+                    }
+                    dfs(grid, plant, pos, area)
+                }).sum::<i64>() + 1
         }
         _ => 0,
     }
