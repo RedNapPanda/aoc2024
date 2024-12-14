@@ -2,7 +2,6 @@ use itertools::Itertools;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let mut files = files(lines);
-
     let mut right = files.len() - 1;
     for i in 0..files.len() {
         if right <= i || files[i] != usize::MAX {
@@ -14,13 +13,11 @@ pub fn solve1(lines: &[String]) -> i64 {
         files.swap(i, right);
         right -= 1;
     }
-
     sum(files)
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
     let mut files = files(lines);
-
     let chunks = files
         .iter()
         .enumerate()
@@ -28,16 +25,9 @@ pub fn solve2(lines: &[String]) -> i64 {
         .into_iter()
         .filter_map(|(x, mut chunk)| match x {
             usize::MAX => None,
-            _ => {
-                if let Some((idx, _)) = chunk.next() {
-                    Some((idx, chunk.count() + 1))
-                } else {
-                    None
-                }
-            }
+            _ => chunk.next().map(|(i, _)| (i, chunk.count() + 1))
         })
         .collect_vec();
-
     for i in (0..chunks.len()).rev() {
         let (idx, file_len) = chunks[i];
         let mut width = 0;
@@ -61,7 +51,6 @@ pub fn solve2(lines: &[String]) -> i64 {
             }
         }
     }
-
     sum(files)
 }
 

@@ -1,5 +1,5 @@
 use std::cmp;
-use std::collections::HashMap;
+use rustc_hash::FxHashMap;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let (mut l_list, mut r_list): (Vec<_>, Vec<_>) = lines
@@ -17,7 +17,7 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let mut count_map = HashMap::<i64, (bool, i64)>::new();
+    let mut count_map = FxHashMap::<i64, (bool, i64)>::default();
     lines
         .iter()
         .map(|line| line.split_once("   ").unwrap())

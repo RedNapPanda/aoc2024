@@ -6,8 +6,8 @@ use std::collections::HashSet;
 const DIRECTIONS: [(i64, i64); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let grid = &Grid::<char>::from(lines);
-    plots(grid)
+    Grid::<char>::from(lines)
+        .plots()
         .iter()
         .map(|(area, plot)| {
             let perimeter = plot
@@ -22,7 +22,7 @@ pub fn solve1(lines: &[String]) -> i64 {
 
 pub fn solve2(lines: &[String]) -> i64 {
     let grid = &Grid::<char>::from(lines);
-    plots(grid)
+    grid.plots()
         .iter()
         .map(|(area, plot)| {
             let plant = grid.get(&plot[0]).unwrap();
@@ -50,40 +50,42 @@ pub fn solve2(lines: &[String]) -> i64 {
         .sum()
 }
 
-fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Point>)> {
-    let seen = &mut HashSet::new();
-    let mut plots = Vec::new();
-    for (pos, &plant) in grid.iter_enumerate() {
-        if seen.contains(&pos) {
-            continue;
+impl Grid<char> {
+    fn plots(&self) -> Vec<(i64, Vec<Point>)> {
+        let seen = &mut HashSet::new();
+        let mut plots = Vec::new();
+        for (pos, &plant) in self.iter_enumerate() {
+            if seen.contains(&pos) {
+                continue;
+            }
+            let area = &mut HashSet::new();
+            let count = self.dfs(plant, pos, area);
+            if area.is_empty() {
+                continue;
+            }
+            seen.extend(area.clone());
+            plots.push((count, area.iter().cloned().unique().collect_vec()));
         }
-        let area = &mut HashSet::new();
-        let count = dfs(grid, plant, pos, area);
-        if area.is_empty() {
-            continue;
-        }
-        seen.extend(area.clone());
-        plots.push((count, area.iter().cloned().unique().collect_vec()));
+        plots
     }
-    plots
-}
 
-fn dfs(grid: &Grid<char>, plant: char, pos: Point, area: &mut HashSet<Point>) -> i64 {
-    match grid.get(&pos) {
-        Some(&plot) if plot == plant => {
-            area.insert(pos.clone());
-            DIRECTIONS
-                .iter()
-                .map(|dir| {
-                    let pos = &pos + dir;
-                    if area.contains(&pos) {
-                        return 0;
-                    }
-                    dfs(grid, plant, pos, area)
-                })
-                .sum::<i64>()
-                + 1
+    fn dfs(&self, plant: char, pos: Point, area: &mut HashSet<Point>) -> i64 {
+        match self.get(&pos) {
+            Some(&plot) if plot == plant => {
+                area.insert(pos.clone());
+                DIRECTIONS
+                    .iter()
+                    .map(|dir| {
+                        let pos = &pos + dir;
+                        if area.contains(&pos) {
+                            return 0;
+                        }
+                        self.dfs(plant, pos, area)
+                    })
+                    .sum::<i64>()
+                    + 1
+            }
+            _ => 0,
         }
-        _ => 0,
     }
 }

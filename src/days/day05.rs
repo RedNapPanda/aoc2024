@@ -1,10 +1,10 @@
 use itertools::Itertools;
 use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
+use rustc_hash::{FxHashMap, FxHashSet};
 
 pub fn solve1(lines: &[String]) -> i64 {
     let (graph, updates) = build_graph(lines);
-    let mut seen = HashSet::<&str>::new();
+    let mut seen = FxHashSet::default();
     updates
         .iter()
         .map(|update| update.split(",").collect_vec())
@@ -15,7 +15,7 @@ pub fn solve1(lines: &[String]) -> i64 {
 
 pub fn solve2(lines: &[String]) -> i64 {
     let (graph, updates) = build_graph(lines);
-    let mut seen = HashSet::<&str>::new();
+    let mut seen = FxHashSet::default();
     updates
         .iter()
         .map(|update| update.split(",").collect_vec())
@@ -32,16 +32,16 @@ pub fn solve2(lines: &[String]) -> i64 {
         .sum()
 }
 
-fn build_graph(lines: &[String]) -> (HashMap<&str, HashSet<&str>>, Vec<String>) {
+fn build_graph(lines: &[String]) -> (FxHashMap<&str, FxHashSet<&str>>, Vec<String>) {
     let break_line = lines.iter().position(|l| l.is_empty()).unwrap();
-    let mut graph = HashMap::new();
+    let mut graph = FxHashMap::default();
     lines[..break_line]
         .iter()
         .map(|rule| rule.split_once("|").unwrap())
         .for_each(|(first, second)| {
             graph
                 .entry(first)
-                .or_insert_with(HashSet::new)
+                .or_insert_with(FxHashSet::default)
                 .insert(second);
         });
     (graph, lines[(break_line + 1)..].to_vec())
@@ -49,8 +49,8 @@ fn build_graph(lines: &[String]) -> (HashMap<&str, HashSet<&str>>, Vec<String>) 
 
 fn is_valid<'a>(
     update: &Vec<&'a str>,
-    graph: &HashMap<&str, HashSet<&str>>,
-    seen: &mut HashSet<&'a str>,
+    graph: &FxHashMap<&str, FxHashSet<&str>>,
+    seen: &mut FxHashSet<&'a str>,
 ) -> bool {
     seen.clear();
     update.iter().all(|&page| {
