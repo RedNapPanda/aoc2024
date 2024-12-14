@@ -2,7 +2,6 @@ use crate::utils::grid::Grid;
 use crate::utils::point::Point;
 use itertools::Itertools;
 use regex::Regex;
-use std::ops::{Deref, DerefMut};
 
 #[derive(Debug)]
 struct Robot {
@@ -23,20 +22,6 @@ impl Robot {
         } else if self.position.y >= width {
             self.position.y %= width;
         }
-    }
-}
-
-impl Deref for Robot {
-    type Target = Point;
-
-    fn deref(&self) -> &Self::Target {
-        &self.position
-    }
-}
-
-impl DerefMut for Robot {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.position
     }
 }
 
@@ -82,7 +67,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         // this was clearly a trick question... to find a cycle
         if !grid.iter().flatten().any(|&v| v > 1) {
             // println!("{}\n{}", x + 1, grid);
-            return x + 1
+            return x + 1;
         }
     }
     unreachable!()
@@ -98,7 +83,7 @@ fn parse(lines: &[String]) -> Vec<Robot> {
                 .map(|captures| {
                     // directions are transposed to natural layout where x=row, y=col
                     // x -> right | y -> down == array[y][x]
-                    // vs 
+                    // vs
                     // x -> down | y -> right == array[x][y]
                     let py = captures[1].parse::<i64>().unwrap();
                     let px = captures[2].parse::<i64>().unwrap();

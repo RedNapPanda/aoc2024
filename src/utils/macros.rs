@@ -83,7 +83,7 @@ macro_rules! day_fn {
             match day {
                 $(
                 $day => if part1 {
-                            paste! { [<day $day>]::solve1 }                  
+                            paste! { [<day $day>]::solve1 }
                         } else {
                             paste! { [<day $day>]::solve2 }
                         },
