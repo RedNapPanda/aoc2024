@@ -57,14 +57,11 @@ pub fn solve1(lines: &[String]) -> i64 {
         if pos.x == mid_height || pos.y == mid_width {
             continue;
         }
-        let quadrant = if pos.x < mid_height && pos.y < mid_width {
-            1
-        } else if pos.x < mid_height && pos.y > mid_width {
-            2
-        } else if pos.x > mid_height && pos.y < mid_width {
-            3
-        } else {
-            4
+        let quadrant = match () {
+            () if pos.x < mid_height && pos.y < mid_width => 1,
+            () if pos.x < mid_height && pos.y > mid_width => 2,
+            () if pos.x > mid_height && pos.y < mid_width => 3,
+            _ => 4,
         };
         quadrants.insert(quadrant, quadrants.get(&quadrant).unwrap_or(&0) + 1);
     }
@@ -75,7 +72,6 @@ pub fn solve2(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut grid = Grid::<usize>::with_dimensions(height as usize, width as usize);
     let mut robots = parse(lines);
-    let mut res = 0;
     for x in 0..10_000 {
         grid.reset_defaults();
         for robot in &mut robots {
@@ -86,11 +82,11 @@ pub fn solve2(lines: &[String]) -> i64 {
         // hintword was 'most' robots (though they could have technically overlapped anyways...)
         // this was clearly a trick question... to find a cycle
         if !grid.iter().flatten().any(|&v| v > 1) {
-            println!("{}\n{}", x + 1, grid);
-            res = x + 1
+            // println!("{}\n{}", x + 1, grid);
+            return x + 1
         }
     }
-    res
+    unreachable!()
 }
 
 fn parse(lines: &[String]) -> Vec<Robot> {
