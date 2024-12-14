@@ -2,7 +2,6 @@ use crate::utils::grid::Grid;
 use crate::utils::point::Point;
 use itertools::Itertools;
 use regex::Regex;
-use rustc_hash::FxHashMap;
 use std::ops::{Deref, DerefMut};
 
 #[derive(Debug)]
@@ -51,21 +50,21 @@ pub fn solve1(lines: &[String]) -> i64 {
     }
     let mid_height = height / 2;
     let mid_width = width / 2;
-    let mut quadrants = FxHashMap::default();
+    let mut quadrants = [0; 4];
     for robot in &robots {
         let pos = &robot.position;
         if pos.x == mid_height || pos.y == mid_width {
             continue;
         }
         let quadrant = match () {
-            () if pos.x < mid_height && pos.y < mid_width => 1,
-            () if pos.x < mid_height && pos.y > mid_width => 2,
-            () if pos.x > mid_height && pos.y < mid_width => 3,
-            _ => 4,
+            () if pos.x < mid_height && pos.y < mid_width => 0,
+            () if pos.x < mid_height && pos.y > mid_width => 1,
+            () if pos.x > mid_height && pos.y < mid_width => 2,
+            _ => 3,
         };
-        quadrants.insert(quadrant, quadrants.get(&quadrant).unwrap_or(&0) + 1);
+        quadrants[quadrant] += 1;
     }
-    quadrants.values().product::<i64>()
+    quadrants.iter().product::<i64>()
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
