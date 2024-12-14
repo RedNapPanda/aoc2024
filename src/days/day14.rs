@@ -97,6 +97,10 @@ fn parse(lines: &[String]) -> Vec<Robot> {
             regex
                 .captures_iter(l)
                 .map(|captures| {
+                    // directions are transposed to natural layout where x=row, y=col
+                    // x -> right | y -> down == array[y][x]
+                    // vs 
+                    // x -> down | y -> right == array[x][y]
                     let py = captures[1].parse::<i64>().unwrap();
                     let px = captures[2].parse::<i64>().unwrap();
                     let vy = captures[3].parse::<i64>().unwrap();
