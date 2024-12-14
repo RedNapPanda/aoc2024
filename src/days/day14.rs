@@ -41,15 +41,7 @@ pub fn solve1(lines: &[String]) -> i64 {
         if pos.x == mid_height || pos.y == mid_width {
             continue;
         }
-        let quadrant = if pos.x < mid_height && pos.y < mid_width {
-            0
-        } else if pos.x < mid_height && pos.y > mid_width {
-            1
-        } else if pos.x > mid_height && pos.y < mid_width {
-            2
-        } else {
-            3
-        };
+        let quadrant = (pos.x > mid_height) as usize * 2 + (pos.y > mid_width) as usize;
         quadrants[quadrant] += 1;
     }
     quadrants.iter().product::<i64>()
@@ -68,6 +60,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         // printing all grids with no overlap.
         // hintword was 'most' robots (though they could have technically overlapped anyways...)
         // this was clearly a trick question... to find a cycle
+        // I feel like this wasn't supposed to work
         if !grid.iter().flatten().any(|&v| v > 1) {
             // println!("{}\n{}", x + 1, grid);
             return x + 1;
