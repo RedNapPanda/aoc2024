@@ -32,16 +32,8 @@ pub fn solve1(lines: &[String]) -> i64 {
     for robot in &mut robots {
         let x100 = robot.position.x + 100 * robot.velocity.x;
         let y100 = robot.position.y + 100 * robot.velocity.y;
-        robot.position.x = if x100 < 0 {
-            height - (!x100 % height) - 1
-        } else {
-            x100 % height
-        };
-        robot.position.y = if y100 < 0 {
-            width - (!y100 % width) - 1
-        } else {
-            y100 % width
-        };
+        robot.position.x = ((x100 % height) + height) % height; 
+        robot.position.y = ((y100 % width) + width) % width;
     }
     let mid_height = height / 2;
     let mid_width = width / 2;
