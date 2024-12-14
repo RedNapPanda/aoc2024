@@ -1,6 +1,6 @@
 use crate::utils::point::Point;
 use itertools::Itertools;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter, Result};
 use std::ops::{Index, IndexMut};
 use std::slice::Iter;
 
@@ -11,12 +11,12 @@ pub struct Grid<T> {
 
 impl<T> Display for Grid<T>
 where
-    T: Display + std::fmt::Debug,
+    T: Default + Display + Debug,
 {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         let mut res = Ok(());
         for row in &self.rows {
-            res = res.and_then(|_| writeln!(f, "{:?}", row));
+            res = res.and_then(|_| writeln!(f, "{}", row.iter().join("")));
         }
         res
     }
@@ -52,6 +52,17 @@ impl<T> Grid<T> {
                 .enumerate()
                 .map(move |(y, v)| (Point::from((x as i64, y as i64)), v))
         })
+    }
+}
+
+impl<T> Grid<T>
+where
+    T: Default + Clone,
+{
+    pub fn with_dimensions(height: usize, width: usize) -> Grid<T> {
+        Self {
+            rows: vec![vec![T::default(); width]; height],
+        }
     }
 }
 
@@ -91,7 +102,10 @@ impl<T> Index<usize> for Grid<T> {
     }
 }
 
-impl<T> IndexMut<usize> for Grid<T> {
+impl<T> IndexMut<usize> for Grid<T>
+where
+    T: Default,
+{
     fn index_mut(&mut self, index: usize) -> &mut Vec<T> {
         &mut self.rows[index]
     }

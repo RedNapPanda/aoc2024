@@ -53,3 +53,25 @@ macro_rules! impl_ops_ref_copy {
         forward_ref_binop! { $imp, $method for $t, $u }
     };
 }
+
+#[macro_export]
+macro_rules! impl_ops_assign_ref_copy {
+    ($imp:ident, $method:ident |$t_i:ident: $t:ty, $u_i:ident: $u:ty| $ex:expr) => {
+        impl<'a, 'b> $imp<&'b $u> for $t {
+            #[inline]
+            #[track_caller]
+            fn $method(&mut self, $u_i: &'b $u) {
+                let $t_i = self;
+                $ex
+            }
+        }
+        impl<'a> $imp<$u> for $t {
+            #[inline]
+            #[track_caller]
+            fn $method(&mut self, $u_i: $u) {
+                let $t_i = self;
+                $ex
+            }
+        }
+    };
+}

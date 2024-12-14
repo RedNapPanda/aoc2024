@@ -62,6 +62,8 @@ fn get_day_fn(day: u8, part1: bool) -> impl Fn(&[String]) -> i64 {
         12 => day12::solve2,
         13 if part1 => day13::solve1,
         13 => day13::solve2,
+        14 if part1 => day14::solve1,
+        14 => day14::solve2,
         _ => panic!("Invalid day"),
     }
 }
