@@ -47,11 +47,11 @@ impl<T> Grid<T> {
     }
 
     pub fn iter_enumerate(&self) -> impl Iterator<Item = (Point, &T)> + '_ {
-        self.iter()
-            .flatten()
-            .enumerate()
-            // reindex the flattened enumeration into Points on Grid
-            .map(|(i, v)| (Point::from((i / self.height(), i % self.width())), v))
+        self.iter().enumerate().flat_map(|(x, row)| {
+            row.iter()
+                .enumerate()
+                .map(move |(y, v)| (Point::from((x as i64, y as i64)), v))
+        })
     }
 }
 

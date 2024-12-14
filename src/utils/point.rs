@@ -7,6 +7,16 @@ pub struct Point {
     pub y: i64,
 }
 
+impl<T> From<(T, T)> for Point
+where T: Into<i64>{
+    fn from((x, y): (T, T)) -> Self {
+        Self {
+            x: x.into() as i64,
+            y: y.into() as i64,
+        }
+    }
+}
+
 impl Point {
     pub fn left(&self) -> Self {
         Self {
@@ -32,6 +42,31 @@ impl Point {
             y: self.y,
         }
     }
+
+    pub fn left_up(&self) -> Self {
+        Self {
+            x: self.x - 1,
+            y: self.y - 1,
+        }
+    }
+    pub fn right_up(&self) -> Self {
+        Self {
+            x: self.x - 1,
+            y: self.y + 1,
+        }
+    }
+    pub fn left_down(&self) -> Self {
+        Self {
+            x: self.x + 1,
+            y: self.y - 1,
+        }
+    }
+    pub fn right_down(&self) -> Self {
+        Self {
+            x: self.x + 1,
+            y: self.y + 1,
+        }
+    }
 }
 
 impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {
@@ -53,18 +88,3 @@ impl_ops_ref_copy!(Sub, sub |p: Point, other: (i64, i64)| Point {
     x: p.x - other.0,
     y: p.y - other.1
 });
-
-impl From<(i64, i64)> for Point {
-    fn from((x, y): (i64, i64)) -> Self {
-        Self { x, y }
-    }
-}
-
-impl From<(usize, usize)> for Point {
-    fn from((x, y): (usize, usize)) -> Self {
-        Self {
-            x: x as i64,
-            y: y as i64,
-        }
-    }
-}

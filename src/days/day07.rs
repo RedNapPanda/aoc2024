@@ -12,12 +12,16 @@ fn solve(lines: &[String], concat: bool) -> i64 {
     lines
         .iter()
         .map(|line| {
-            let split = line.split(":").map(|split| split.trim()).collect_vec();
-            let target = split[0].parse::<i64>().unwrap();
-            let nums = split[1]
+            let (target, nums) = line
+                .split(":")
+                .map(|split| split.trim())
+                .collect_tuple()
+                .unwrap();
+            let target = target.parse::<i64>().unwrap();
+            let nums = nums
                 .split_whitespace()
                 .map(|s| s.parse::<i64>().unwrap())
-                .collect::<Vec<_>>();
+                .collect_vec();
             (target, nums)
         })
         .filter(|(target, nums)| is_possible(nums, *target, concat))

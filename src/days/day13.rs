@@ -44,8 +44,8 @@ fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
                         .captures(l)
                         .map(|c| {
                             Point::from((
-                                c[1].parse::<usize>().unwrap(),
-                                c[2].parse::<usize>().unwrap(),
+                                c[1].parse::<i64>().unwrap(),
+                                c[2].parse::<i64>().unwrap(),
                             ))
                         })
                         .unwrap()

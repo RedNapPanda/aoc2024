@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use rustc_hash::FxHashMap;
 
 pub fn solve1(lines: &[String]) -> i64 {
@@ -16,7 +15,6 @@ fn blink(lines: &[String], times: i64) -> i64 {
         .flat_map(|line| {
             line.split_whitespace()
                 .map(|s| s.parse::<i64>().unwrap())
-                .collect_vec()
         })
         .map(|x| (x, 1i64))
         .collect::<FxHashMap<_, _>>();

@@ -53,7 +53,7 @@ impl Grid<char> {
     }
 
     fn walk(&self, mut pos: Point) -> (HashSet<(Point, Point)>, bool) {
-        let mut dir = <Point as From<(i64, i64)>>::from((-1, 0));
+        let mut dir = Point::from((-1, 0));
         let mut seen = HashSet::new();
         let mut fast = pos.clone();
         let mut fast_dir = dir.clone();
