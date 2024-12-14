@@ -5,21 +5,13 @@ use std::collections::HashSet;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let (grid, start) = Grid::with_start(lines);
-    grid.walk(start)
-        .0
-        .iter()
-        .map(|(pos, _)| pos)
-        .unique()
-        .count() as i64
+    grid.walk_unique(start).count() as i64
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
     let (grid, start) = &mut Grid::with_start(lines);
-    grid.walk(start.clone())
-        .0
-        .into_iter()
-        .map(|(pos, _)| pos)
-        .unique()
+    grid.clone()
+        .walk_unique(start.clone())
         .filter(|pos| {
             if grid[pos.x as usize][pos.y as usize] == '.' {
                 grid[pos.x as usize][pos.y as usize] = '#';
@@ -29,16 +21,6 @@ pub fn solve2(lines: &[String]) -> i64 {
             looped
         })
         .count() as i64
-}
-
-fn rot90_point(pos: Point) -> Point {
-    match pos {
-        Point { x: 0, y: 1 } => Point { x: 1, y: 0 },
-        Point { x: 0, y: -1 } => Point { x: -1, y: 0 },
-        Point { x: 1, y: 0 } => Point { x: 0, y: -1 },
-        Point { x: -1, y: 0 } => Point { x: 0, y: 1 },
-        _ => unreachable!(),
-    }
 }
 
 impl Grid<char> {
@@ -51,6 +33,14 @@ impl Grid<char> {
             .unwrap();
         (grid.clone(), start)
     }
+    
+    fn walk_unique(&self, start: Point) -> impl Iterator<Item = Point> + '_ {
+        self.walk(start)
+            .0
+            .into_iter()
+            .map(|(pos, _)| pos)
+            .unique()
+    }
 
     fn walk(&self, mut pos: Point) -> (HashSet<(Point, Point)>, bool) {
         let mut dir = Point::from((-1, 0));
@@ -62,20 +52,20 @@ impl Grid<char> {
             for _ in 0..2 {
                 let contains = seen.contains(&(fast.clone(), fast_dir.clone()));
                 if !self.contains(&fast) || contains {
-                    return (seen, contains);
+                    return (seen, contains)
                 }
                 seen.insert((fast.clone(), fast_dir.clone()));
                 let fast_next = &fast + &fast_dir;
                 if self.contains(&fast_next)
                     && self[fast_next.x as usize][fast_next.y as usize] == '#'
                 {
-                    fast_dir = rot90_point(fast_dir);
-                    continue;
+                    fast_dir = fast_dir.rot90_cw();
+                    continue
                 }
                 fast = fast_next;
             }
             if self.contains(&next) && self[next.x as usize][next.y as usize] == '#' {
-                dir = rot90_point(dir);
+                dir = dir.rot90_cw();
             } else {
                 pos = next.clone();
             }

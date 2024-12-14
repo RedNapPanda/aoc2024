@@ -1,17 +1,11 @@
 use itertools::Itertools;
 use rustc_hash::{FxHashMap, FxHashSet};
 use std::cmp::Ordering;
+use std::str::Split;
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let (graph, updates) = build_graph(lines);
-    let mut seen = FxHashSet::default();
-    updates
-        .iter()
-        .map(|update| {
-            let split = update.split(",");
-            (split.clone(), split.count())
-        })
-        .filter(|(update, _)| is_valid(update.clone(), &graph, &mut seen))
+    let (graph, updates) = &build_graph(lines);
+    filter_updates(graph, updates, false)
         .map(|(mut update, len)| {
             update
                 .nth(len / 2)
@@ -21,15 +15,8 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let (graph, updates) = build_graph(lines);
-    let mut seen = FxHashSet::default();
-    updates
-        .iter()
-        .map(|update| {
-            let split = update.split(",");
-            (split.clone(), split.count())
-        })
-        .filter(|(update, _)| !is_valid(update.clone(), &graph, &mut seen))
+    let (graph, updates) = &build_graph(lines);
+    filter_updates(graph, updates, true)
         .map(|(update, len)| {
             update
                 .sorted_unstable_by(
@@ -59,9 +46,29 @@ fn build_graph(lines: &[String]) -> (FxHashMap<&str, FxHashSet<&str>>, Vec<Strin
     (graph, lines[(break_line + 1)..].to_vec())
 }
 
+fn filter_updates<'a>(
+    graph: &'a FxHashMap<&'a str, FxHashSet<&'a str>>,
+    updates: &'a [String],
+    part2: bool,
+) -> impl Iterator<Item = (Split<'a, &'a str>, usize)> + 'a {
+    let mut seen = FxHashSet::default();
+    updates
+        .iter()
+        .map(|update| {
+            let split = update.split(",");
+            (split.clone(), split.count())
+        })
+        .filter(move |(update, _)| {
+            match is_valid(graph, update.clone(), &mut seen) {
+                v if part2 => !v,
+                v => v
+            }
+        })
+}
+
 fn is_valid<'a>(
-    mut update: impl Iterator<Item = &'a str>,
     graph: &FxHashMap<&str, FxHashSet<&str>>,
+    mut update: impl Iterator<Item = &'a str>,
     seen: &mut FxHashSet<&'a str>,
 ) -> bool {
     seen.clear();

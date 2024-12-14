@@ -8,11 +8,13 @@ pub struct Point {
 }
 
 impl<T> From<(T, T)> for Point
-where T: Into<i64>{
+where
+    T: Into<i64>,
+{
     fn from((x, y): (T, T)) -> Self {
         Self {
-            x: x.into() as i64,
-            y: y.into() as i64,
+            x: x.into(),
+            y: y.into(),
         }
     }
 }
@@ -65,6 +67,24 @@ impl Point {
         Self {
             x: self.x + 1,
             y: self.y + 1,
+        }
+    }
+    /**
+    Rotate clockwise about 90 degree origin
+    */
+    pub fn rot90_cw(&self) -> Self {
+        Self {
+            x: self.y,
+            y: -self.x,
+        }
+    }
+    /**
+    Rotate counter-clockwise about 90 degree origin
+    */
+    pub fn rot90_ccw(&self) -> Self {
+        Self {
+            x: -self.y,
+            y: self.x,
         }
     }
 }
