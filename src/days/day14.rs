@@ -62,7 +62,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         // this was clearly a trick question... to find a cycle
         // I feel like this wasn't supposed to work
         if !grid.iter().flatten().any(|&v| v > 1) {
-            // println!("{}\n{}", x + 1, grid);
+            println!("\n{}", grid);
             return x + 1;
         }
     }
