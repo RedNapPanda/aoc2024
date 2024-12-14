@@ -28,10 +28,19 @@ impl Robot {
 pub fn solve1(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut robots = parse(lines);
-    for _ in 0..100 {
-        for robot in &mut robots {
-            robot.walk(height, width);
-        }
+    for robot in &mut robots {
+        let x100 = robot.position.x + 100 * robot.velocity.x;
+        let y100 = robot.position.y + 100 * robot.velocity.y;
+        robot.position.x = if x100 < 0 {
+            height - (!x100 % height) - 1
+        } else {
+            x100 % height
+        };
+        robot.position.y = if y100 < 0 {
+            width - (!y100 % width) - 1
+        } else {
+            y100 % width
+        };
     }
     let mid_height = height / 2;
     let mid_width = width / 2;
@@ -51,7 +60,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut grid = Grid::<usize>::with_dimensions(height as usize, width as usize);
     let mut robots = parse(lines);
-    for x in 0..10_000 {
+    for x in 0..(103*101) {
         grid.reset_defaults();
         for robot in &mut robots {
             robot.walk(height, width);
@@ -62,7 +71,6 @@ pub fn solve2(lines: &[String]) -> i64 {
         // this was clearly a trick question... to find a cycle
         // I feel like this wasn't supposed to work
         if !grid.iter().flatten().any(|&v| v > 1) {
-            println!("\n{}", grid);
             return x + 1;
         }
     }
