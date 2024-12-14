@@ -29,26 +29,25 @@ fn solve(lines: &[String], concat: bool) -> i64 {
         .sum()
 }
 
-fn is_possible(nums: &[i64], mut target: i64, concat: bool) -> bool {
-    for i in (0..nums.len()).rev() {
-        let num = nums[i];
-        if i == 0 {
-            return target == num;
-        }
-        if target % num == 0 && is_possible(&nums[..i], target / num, concat) {
-            return true;
-        }
-        let ten_pow_digits = 10_i64.pow(num.ilog10() + 1);
-        if concat
-            && target % ten_pow_digits == num
-            && is_possible(&nums[..i], target / ten_pow_digits, concat)
-        {
-            return true;
-        }
-        if target <= num {
-            break;
-        }
-        target -= num;
+fn is_possible(nums: &[i64], target: i64, concat: bool) -> bool {
+    let i = match nums.len() {
+        0 => return false,
+        1 => return target == nums[0],
+        x => x - 1,
+    };
+    let num = nums[i];
+    if target % num == 0 && is_possible(&nums[..i], target / num, concat) {
+        return true;
     }
-    false
+    let ten_pow_digits = 10_i64.pow(num.ilog10() + 1);
+    if concat
+        && target % ten_pow_digits == num
+        && is_possible(&nums[..i], target / ten_pow_digits, concat)
+    {
+        return true;
+    }
+    if target <= num {
+        return false;
+    }
+    is_possible(&nums[..i], target - num, concat)
 }
