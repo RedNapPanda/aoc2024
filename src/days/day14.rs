@@ -41,11 +41,14 @@ pub fn solve1(lines: &[String]) -> i64 {
         if pos.x == mid_height || pos.y == mid_width {
             continue;
         }
-        let quadrant = match () {
-            () if pos.x < mid_height && pos.y < mid_width => 0,
-            () if pos.x < mid_height && pos.y > mid_width => 1,
-            () if pos.x > mid_height && pos.y < mid_width => 2,
-            _ => 3,
+        let quadrant = if pos.x < mid_height && pos.y < mid_width {
+            0
+        } else if pos.x < mid_height && pos.y > mid_width {
+            1
+        } else if pos.x > mid_height && pos.y < mid_width {
+            2
+        } else {
+            3
         };
         quadrants[quadrant] += 1;
     }
