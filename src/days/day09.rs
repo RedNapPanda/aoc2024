@@ -25,33 +25,32 @@ pub fn solve2(lines: &[String]) -> i64 {
         .into_iter()
         .filter_map(|(x, mut chunk)| match x {
             usize::MAX => None,
-            _ => chunk.next().map(|(i, _)| (i, chunk.count() + 1))
+            _ => chunk.next().map(|(i, _)| (i, chunk.count() + 1)),
         })
         .collect_vec();
-    (0..chunks.len()).rev()
-        .for_each(|i| {
-            let (idx, file_len) = chunks[i];
-            let mut width = 0;
-            let mut left_ptr = 0;
-            while left_ptr < idx && width < file_len {
-                let mut width_ptr = left_ptr;
-                while width_ptr < idx && files[width_ptr] == usize::MAX {
-                    width_ptr += 1;
-                }
-                width = width_ptr - left_ptr;
-                if width < file_len {
-                    left_ptr = width_ptr;
-                    while left_ptr < idx && files[left_ptr] != usize::MAX {
-                        left_ptr += 1;
-                    }
+    (0..chunks.len()).rev().for_each(|i| {
+        let (idx, file_len) = chunks[i];
+        let mut width = 0;
+        let mut left_ptr = 0;
+        while left_ptr < idx && width < file_len {
+            let mut width_ptr = left_ptr;
+            while width_ptr < idx && files[width_ptr] == usize::MAX {
+                width_ptr += 1;
+            }
+            width = width_ptr - left_ptr;
+            if width < file_len {
+                left_ptr = width_ptr;
+                while left_ptr < idx && files[left_ptr] != usize::MAX {
+                    left_ptr += 1;
                 }
             }
-            if left_ptr < idx {
-                for i in 0..file_len {
-                    files.swap(left_ptr + i, idx + i);
-                }
-            } 
-        });
+        }
+        if left_ptr < idx {
+            for i in 0..file_len {
+                files.swap(left_ptr + i, idx + i);
+            }
+        }
+    });
     sum(files)
 }
 

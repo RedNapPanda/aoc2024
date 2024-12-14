@@ -61,7 +61,6 @@ fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
         .collect_vec()
 }
 
-
 fn play_all(claw_machines: &[ClawMachine], shift: i64) -> i64 {
     claw_machines
         .iter()
@@ -90,13 +89,8 @@ impl ClawMachine {
         }
         3 * a_count + b_count
     }
-    
-    fn _dfs(
-        &self,
-        a_count: i64,
-        b_count: i64,
-        seen: &mut HashSet<(i64, i64)>,
-    ) -> Option<i64> {
+
+    fn _dfs(&self, a_count: i64, b_count: i64, seen: &mut HashSet<(i64, i64)>) -> Option<i64> {
         if !seen.insert((a_count, b_count)) {
             return None;
         }

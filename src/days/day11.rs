@@ -12,20 +12,18 @@ fn blink(lines: &[String], times: i64) -> i64 {
     let state = lines
         .first()
         .iter()
-        .flat_map(|line| {
-            line.split_whitespace()
-                .map(|s| s.parse::<i64>().unwrap())
-        })
+        .flat_map(|line| line.split_whitespace().map(|s| s.parse::<i64>().unwrap()))
         .map(|x| (x, 1i64))
         .collect::<FxHashMap<_, _>>();
     (0..times)
         .fold(state, |state, _| {
-            state.iter()
+            state
+                .iter()
                 .fold(FxHashMap::default(), |mut next_state, (&x, count)| {
                     if x == 0 {
                         let val = next_state.get(&1).unwrap_or(&0) + count;
                         next_state.insert(1, val);
-                        return next_state
+                        return next_state;
                     }
                     let digits = x.ilog10() + 1;
                     if digits % 2 == 0 {
@@ -36,7 +34,7 @@ fn blink(lines: &[String], times: i64) -> i64 {
                         let right = x % pow;
                         let right_val = next_state.get(&right).unwrap_or(&0) + count;
                         next_state.insert(right, right_val);
-                        return next_state
+                        return next_state;
                     }
                     let i = x * 2024;
                     let val = next_state.get(&i).unwrap_or(&0) + count;

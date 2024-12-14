@@ -58,12 +58,12 @@ fn filter_updates<'a>(
             let split = update.split(",");
             (split.clone(), split.count())
         })
-        .filter(move |(update, _)| {
-            match is_valid(graph, update.clone(), &mut seen) {
+        .filter(
+            move |(update, _)| match is_valid(graph, update.clone(), &mut seen) {
                 v if part2 => !v,
-                v => v
-            }
-        })
+                v => v,
+            },
+        )
 }
 
 fn is_valid<'a>(

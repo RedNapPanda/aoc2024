@@ -11,7 +11,9 @@ pub fn solve2(lines: &[String]) -> i64 {
         })
         .count() as i64
 }
-fn build_levels(lines: &[String]) -> impl Iterator<Item = impl Iterator<Item = i64> + Clone + '_> + '_ {
+fn build_levels(
+    lines: &[String],
+) -> impl Iterator<Item = impl Iterator<Item = i64> + Clone + '_> + '_ {
     lines
         .iter()
         .map(|line| line.split_whitespace().map(|s| s.parse::<i64>().unwrap()))

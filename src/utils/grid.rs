@@ -64,6 +64,14 @@ where
             rows: vec![vec![T::default(); width]; height],
         }
     }
+
+    pub fn reset_defaults(&mut self) {
+        for i in 0..self.height() {
+            for j in 0..self.width() {
+                self.rows[i][j] = T::default()
+            }
+        }
+    }
 }
 
 impl<T> IntoIterator for Grid<T> {

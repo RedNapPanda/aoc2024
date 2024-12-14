@@ -18,7 +18,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .map(|trail_head| grid.solve(trail_head, true))
         .sum()
 }
-        
+
 impl Grid<usize> {
     fn solve(&self, trail_head: &Point, part2: bool) -> i64 {
         let mut count = 0;
@@ -38,7 +38,7 @@ impl Grid<usize> {
         }
         count
     }
-    
+
     fn get_trail_heads(&self) -> Vec<Point> {
         self.iter_enumerate()
             .filter_map(|(p, x)| match x {

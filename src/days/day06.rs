@@ -33,13 +33,9 @@ impl Grid<char> {
             .unwrap();
         (grid.clone(), start)
     }
-    
+
     fn walk_unique(&self, start: Point) -> impl Iterator<Item = Point> + '_ {
-        self.walk(start)
-            .0
-            .into_iter()
-            .map(|(pos, _)| pos)
-            .unique()
+        self.walk(start).0.into_iter().map(|(pos, _)| pos).unique()
     }
 
     fn walk(&self, mut pos: Point) -> (HashSet<(Point, Point)>, bool) {
@@ -52,7 +48,7 @@ impl Grid<char> {
             for _ in 0..2 {
                 let contains = seen.contains(&(fast.clone(), fast_dir.clone()));
                 if !self.contains(&fast) || contains {
-                    return (seen, contains)
+                    return (seen, contains);
                 }
                 seen.insert((fast.clone(), fast_dir.clone()));
                 let fast_next = &fast + &fast_dir;
@@ -60,7 +56,7 @@ impl Grid<char> {
                     && self[fast_next.x as usize][fast_next.y as usize] == '#'
                 {
                     fast_dir = fast_dir.rot90_cw();
-                    continue
+                    continue;
                 }
                 fast = fast_next;
             }
