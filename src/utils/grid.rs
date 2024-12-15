@@ -31,7 +31,9 @@ impl<T> Grid<T> {
     }
 
     pub fn set(&mut self, point: &Point, value: T) {
-        self.rows[point.x as usize][point.y as usize] = value;
+        if self.contains(point) {
+            self.rows[point.x as usize][point.y as usize] = value;
+        }
     }
 
     pub fn height(&self) -> usize {

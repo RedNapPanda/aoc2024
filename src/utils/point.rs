@@ -1,5 +1,5 @@
 use crate::{forward_ref_binop, impl_ops_assign_ref_copy, impl_ops_ref_copy};
-use std::ops::{Add, AddAssign, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Point {
@@ -114,6 +114,11 @@ impl_ops_ref_copy!(Sub, sub |p: Point, other: Point| Point {
 impl_ops_ref_copy!(Sub, sub |p: Point, other: (i64, i64)| Point {
     x: p.x - other.0,
     y: p.y - other.1
+});
+
+impl_ops_ref_copy!(Mul, mul |p: Point, other: i64| Point {
+    x: p.x * other,
+    y: p.y * other
 });
 
 impl_ops_assign_ref_copy!(AddAssign, add_assign |p: Point, other: Point| {

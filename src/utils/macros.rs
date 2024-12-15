@@ -4,15 +4,6 @@ https://github.com/rust-lang/rust/blob/1.83.0/library/core/src/internal_macros.r
 #[macro_export]
 macro_rules! forward_ref_binop {
     ($imp:ident, $method:ident for $t:ty, $u:ty) => {
-        impl $imp<$u> for $t {
-            type Output = $t;
-
-            #[inline]
-            #[track_caller]
-            fn $method(self, other: $u) -> Self::Output {
-                $imp::$method(&self, &other)
-            }
-        }
         impl<'a> $imp<$u> for &'a $t {
             type Output = $t;
 
@@ -29,6 +20,15 @@ macro_rules! forward_ref_binop {
             #[track_caller]
             fn $method(self, other: &$u) -> Self::Output {
                 $imp::$method(&self, other)
+            }
+        }
+        impl $imp<$u> for $t {
+            type Output = $t;
+
+            #[inline]
+            #[track_caller]
+            fn $method(self, other: $u) -> Self::Output {
+                $imp::$method(&self, &other)
             }
         }
     };
