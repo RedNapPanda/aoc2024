@@ -87,6 +87,13 @@ impl Point {
             y: self.x,
         }
     }
+    
+    pub fn inverse(&self) -> Self {
+        Self {
+            x: -self.x,
+            y: -self.y,
+        }
+    }
 }
 
 impl_ops_ref_copy!(Add, add |p: Point, other: Point| Point {

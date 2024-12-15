@@ -3,13 +3,6 @@ use itertools::Itertools;
 use regex::Regex;
 use std::collections::HashSet;
 
-#[derive(Debug, Clone)]
-struct ClawMachine {
-    a_button: Point,
-    b_button: Point,
-    prize: Point,
-}
-
 pub fn solve1(lines: &[String]) -> i64 {
     let claw_machines = claw_machines(lines);
     play_all(&claw_machines, 0)
@@ -30,42 +23,11 @@ pub fn solve2(lines: &[String]) -> i64 {
     play_all(&claw_machines, 10_000_000_000_000)
 }
 
-fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
-    let regex: Regex = Regex::new(".+: X.(\\d+), Y.(\\d+)").unwrap();
-    lines
-        .iter()
-        .chunk_by(|l| !l.is_empty())
-        .into_iter()
-        .filter(|(b, _)| *b)
-        .map(|(_, chunk)| {
-            chunk
-                .map(|l| {
-                    regex
-                        .captures(l)
-                        .map(|c| {
-                            Point::from((
-                                c[1].parse::<i64>().unwrap(),
-                                c[2].parse::<i64>().unwrap(),
-                            ))
-                        })
-                        .unwrap()
-                })
-                .collect_tuple::<(_, _, _)>()
-                .map(|points| ClawMachine {
-                    a_button: points.0,
-                    b_button: points.1,
-                    prize: points.2,
-                })
-                .unwrap()
-        })
-        .collect_vec()
-}
-
-fn play_all(claw_machines: &[ClawMachine], shift: i64) -> i64 {
-    claw_machines
-        .iter()
-        .map(|machine| machine.cramers_rule(shift))
-        .sum()
+#[derive(Debug, Clone)]
+struct ClawMachine {
+    a_button: Point,
+    b_button: Point,
+    prize: Point,
 }
 
 impl ClawMachine {
@@ -106,4 +68,42 @@ impl ClawMachine {
         let b_tokens = self._dfs(a_count, b_count + 1, seen);
         a_tokens.or(b_tokens).min(b_tokens.or(a_tokens))
     }
+}
+
+fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
+    let regex: Regex = Regex::new(".+: X.(\\d+), Y.(\\d+)").unwrap();
+    lines
+        .iter()
+        .chunk_by(|l| !l.is_empty())
+        .into_iter()
+        .filter(|(b, _)| *b)
+        .map(|(_, chunk)| {
+            chunk
+                .map(|l| {
+                    regex
+                        .captures(l)
+                        .map(|c| {
+                            Point::from((
+                                c[1].parse::<i64>().unwrap(),
+                                c[2].parse::<i64>().unwrap(),
+                            ))
+                        })
+                        .unwrap()
+                })
+                .collect_tuple::<(_, _, _)>()
+                .map(|points| ClawMachine {
+                    a_button: points.0,
+                    b_button: points.1,
+                    prize: points.2,
+                })
+                .unwrap()
+        })
+        .collect_vec()
+}
+
+fn play_all(claw_machines: &[ClawMachine], shift: i64) -> i64 {
+    claw_machines
+        .iter()
+        .map(|machine| machine.cramers_rule(shift))
+        .sum()
 }

@@ -59,7 +59,7 @@ impl<T> Grid<T>
 where
     T: Default + Clone,
 {
-    pub fn with_dimensions(height: usize, width: usize) -> Grid<T> {
+    pub fn with_dimensions(height: usize, width: usize) -> Self {
         Self {
             rows: vec![vec![T::default(); width]; height],
         }
@@ -120,8 +120,8 @@ where
 }
 
 impl From<&[String]> for Grid<char> {
-    fn from(vec: &[String]) -> Grid<char> {
-        Grid {
+    fn from(vec: &[String]) -> Self {
+        Self {
             rows: vec
                 .iter()
                 .map(|line| line.chars().collect_vec())
@@ -131,8 +131,8 @@ impl From<&[String]> for Grid<char> {
 }
 
 impl From<&[String]> for Grid<usize> {
-    fn from(vec: &[String]) -> Grid<usize> {
-        Grid {
+    fn from(vec: &[String]) -> Self {
+        Self {
             rows: vec
                 .iter()
                 .map(|line| {

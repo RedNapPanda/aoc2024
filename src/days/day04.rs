@@ -1,17 +1,8 @@
 use crate::utils::grid::Contains;
 use crate::utils::grid::Grid;
 use crate::utils::point::Point;
-
-const XMAS_ENUM: [Xmas; 8] = [
-    Xmas::Right,
-    Xmas::Left,
-    Xmas::Down,
-    Xmas::Up,
-    Xmas::RightDown,
-    Xmas::RightUp,
-    Xmas::LeftDown,
-    Xmas::LeftUp,
-];
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let grid = &Grid::<char>::from(lines);
@@ -20,8 +11,7 @@ pub fn solve1(lines: &[String]) -> i64 {
             if x != 'X' {
                 return None;
             }
-            let xmas = XMAS_ENUM
-                .into_iter()
+            let xmas = Xmas::iter()
                 .filter(|x| {
                     let (p1, p2, p3) = x.points_in_direction(&pos);
                     grid.contains(&p3)
@@ -67,6 +57,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .count() as i64
 }
 
+#[derive(Debug, PartialEq, EnumIter)]
 enum Xmas {
     Right,
     Left,

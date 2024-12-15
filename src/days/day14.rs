@@ -3,30 +3,6 @@ use crate::utils::point::Point;
 use itertools::Itertools;
 use regex::Regex;
 
-#[derive(Clone, Debug)]
-struct Robot {
-    position: Point,
-    velocity: Point,
-}
-
-impl Robot {
-    fn walk(&mut self, height: i64, width: i64) {
-        self.position += &self.velocity;
-        self.position.x = self.normalize(self.position.x, height);
-        self.position.y = self.normalize(self.position.y, width);
-    }
-    
-    fn normalize(&self, x: i64, bound: i64) -> i64 {
-        if x < 0 {
-            x + bound
-        } else if x >= bound {
-            x % bound
-        } else {
-            x
-        }
-    }
-}
-
 pub fn solve1(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut robots = parse(lines);
@@ -105,6 +81,30 @@ pub fn solve2(lines: &[String]) -> i64 {
         // 000000000000000000000000000000000
     }
     unreachable!()
+}
+
+#[derive(Clone, Debug)]
+struct Robot {
+    position: Point,
+    velocity: Point,
+}
+
+impl Robot {
+    fn walk(&mut self, height: i64, width: i64) {
+        self.position += &self.velocity;
+        self.position.x = self.normalize(self.position.x, height);
+        self.position.y = self.normalize(self.position.y, width);
+    }
+
+    fn normalize(&self, x: i64, bound: i64) -> i64 {
+        if x < 0 {
+            x + bound
+        } else if x >= bound {
+            x % bound
+        } else {
+            x
+        }
+    }
 }
 
 fn parse(lines: &[String]) -> Vec<Robot> {
