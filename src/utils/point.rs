@@ -87,7 +87,7 @@ impl Point {
             y: self.x,
         }
     }
-    
+
     pub fn inverse(&self) -> Self {
         Self {
             x: -self.x,
