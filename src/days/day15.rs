@@ -5,60 +5,13 @@ use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let check = |&c: &char| c == 'O';
     let (mut grid, movements) = parse(lines, false);
-    let mut robot = grid.find_robot();
-    for movement in &movements {
-        if let Some(open) = grid.next_open(robot.clone(), movement, check) {
-            grid.move_boxes(movement, &robot, &open);
-            robot += movement.vector();
-        }
-    }
-    grid.iter_enumerate()
-        .filter_map(|(point, char)| match char {
-            'O' => Some(point),
-            _ => None,
-        })
-        .map(|pos| pos.x * 100 + pos.y)
-        .sum()
+    grid.walk_robot(&movements, 'O')
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let check = |&c: &char| c == '[' || c == ']';
     let (mut grid, movements) = parse(lines, true);
-    let mut robot = grid.find_robot();
-    for movement in &movements {
-        if let Some(open) = grid.next_open(robot.clone(), movement, check) {
-            let (can_push, stack_opt) = grid.move_double_boxes(movement, &robot, &open);
-            if !can_push {
-                continue;
-            }
-            if let Some(mut stack) = stack_opt {
-                stack.insert((robot.clone(), &robot + movement.vector()));
-                let mut stack = stack.iter()
-                    .sorted_unstable_by(|a, b| match movement {
-                        Direction::Left => b.0.y.cmp(&a.0.y),
-                        Direction::Up => b.0.x.cmp(&a.0.x),
-                        Direction::Right => a.0.y.cmp(&b.0.y),
-                        Direction::Down => a.0.x.cmp(&b.0.x),
-                    })
-                    .collect_vec();
-                while let Some((from, to)) = stack.pop() {
-                    let tmp = *grid.get(to).unwrap();
-                    grid.set(to, *grid.get(from).unwrap());
-                    grid.set(from, tmp);
-                }
-                robot += movement.vector();
-            }
-        }
-    }
-    grid.iter_enumerate()
-        .filter_map(|(point, char)| match char {
-            '[' => Some(point),
-            _ => None,
-        })
-        .map(|pos| pos.x * 100 + pos.y)
-        .sum()
+    grid.walk_robot(&movements, '[')
 }
 
 fn parse(lines: &[String], part2: bool) -> (Grid<char>, Vec<Direction>) {
@@ -132,6 +85,17 @@ impl From<char> for Direction {
     }
 }
 impl Grid<char> {
+    fn walk_robot(&mut self, movements: &Vec<Direction>, box_char: char) -> i64 {
+        let mut robot = self.find_robot();
+        for movement in movements {
+            self.shift_boxes(&mut robot, movement);
+        }
+        self.iter_enumerate()
+            .filter_map(|(point, &c)| if c == box_char { Some(point) } else { None })
+            .map(|pos| pos.x * 100 + pos.y)
+            .sum()
+    }
+
     fn find_robot(&self) -> Point {
         self.iter_enumerate()
             .find_map(|(point, char)| match char {
@@ -141,101 +105,92 @@ impl Grid<char> {
             .unwrap()
     }
 
-    fn next_open(
-        &self,
-        start: Point,
-        direction: &Direction,
-        check: fn(&char) -> bool,
-    ) -> Option<Point> {
-        let vector = &direction.vector();
-        (1..)
-            .map(|i| {
-                let next = &start + vector * i;
-                let c = self.get(&next);
-                (next, c)
-            })
-            .take_while_inclusive(|(_, c)| c.is_some_and(check))
-            .last()
-            .and_then(|(p, c)| match c {
-                Some('#') => None,
-                _ => Some(p),
-            })
-    }
-
-    fn move_boxes(&mut self, direction: &Direction, pos: &Point, end: &Point) {
-        if pos == end {
+    fn shift_boxes(&mut self, robot: &mut Point, movement: &Direction) {
+        let (can_push, stack_opt) = self.boxes_to_move(&movement, &robot);
+        if !can_push {
             return;
         }
-        let vector = direction.vector();
-        let next = pos + &vector;
-        if let Some(&c) = self.get(&next) {
-            if c == 'O' {
-                self.move_boxes(direction, &next, end);
-            }
-            let tmp = *self.get(&next).unwrap();
-            self.set(&next, *self.get(pos).unwrap());
-            self.set(pos, tmp);
+        if let Some(mut stack) = stack_opt {
+            stack.insert((robot.clone(), robot.clone() + movement.vector()));
+            stack
+                .iter()
+                .sorted_unstable_by(|a, b| match movement {
+                    Direction::Left => a.0.y.cmp(&b.0.y),
+                    Direction::Right => b.0.y.cmp(&a.0.y),
+                    Direction::Up => a.0.x.cmp(&b.0.x),
+                    Direction::Down => b.0.x.cmp(&a.0.x),
+                })
+                .for_each(|(from, to)| {
+                    let tmp = *self.get(to).unwrap();
+                    self.set(to, *self.get(from).unwrap());
+                    self.set(from, tmp);
+                });
+            *robot += movement.vector();
         }
     }
 
-    fn move_double_boxes(
+    fn boxes_to_move(
         &mut self,
         direction: &Direction,
         pos: &Point,
-        end: &Point,
     ) -> (bool, Option<HashSet<(Point, Point)>>) {
-        if pos == end && self.get(pos).is_none_or(|&c| c == '#') {
-            return (true, None);
+        const INVALID: (bool, Option<HashSet<(Point, Point)>>) = (false, None);
+        if self.get(pos).is_none_or(|&c| c == '#') {
+            return INVALID;
         }
         let mut stack = HashSet::new();
         let vector = direction.vector();
         let next = pos + &vector;
         let next_char = self.get(&next);
         match next_char {
+            Some('O') => {
+                let (can_push, next_stack) = self.boxes_to_move(direction, &next);
+                if !can_push {
+                    return INVALID;
+                }
+                if let Some(list) = next_stack {
+                    stack.extend(list);
+                }
+                stack.insert((next.clone(), next + &vector));
+            }
             Some('[') | Some(']') => match direction {
                 Direction::Left | Direction::Right => {
                     let other_half = &next + &vector;
                     let after_box = &other_half + &vector;
-                    let (push_half, half_boxes) = self.move_double_boxes(direction, &other_half, end);
+                    let (push_half, half_boxes) = self.boxes_to_move(direction, &other_half);
+                    if !push_half {
+                        return INVALID;
+                    }
                     if let Some(list) = half_boxes {
-                        if push_half {
-                            stack.extend(list);
-                        }
+                        stack.extend(list);
                     }
-                    if push_half {
-                        stack.insert((other_half.clone(), after_box));
-                        stack.insert((next.clone(), other_half.clone()));
-                    }
+                    stack.insert((other_half.clone(), after_box));
+                    stack.insert((next.clone(), other_half.clone()));
                 }
                 Direction::Up | Direction::Down => {
-                    let other_half = if let Some('[') = next_char {
-                        next.right()
-                    } else if let Some(']') = next_char {
-                        next.left()
-                    } else {
-                        unimplemented!()
-                    };
+                    let mut other_half = next.right();
+                    if let Some(']') = next_char {
+                        other_half = next.left();
+                    }
                     let after_half = &next + &vector;
                     let after_other = &other_half + &vector;
-                    let (push_half, half_boxes) = self.move_double_boxes(direction, &next, end);
-                    let (push_other, other_boxes) =
-                        self.move_double_boxes(direction, &other_half, end);
-                    if push_half && push_other {
-                        if let Some(list) = half_boxes {
-                            stack.extend(list);
-                        }
-                        if let Some(list) = other_boxes {
-                            stack.extend(list);
-                        }
-                        stack.insert((other_half.clone(), after_other.clone()));
-                        stack.insert((next.clone(), after_half.clone()));
-                    } else {
-                        return (false, None)
+                    let (push_half, half_boxes) = self.boxes_to_move(direction, &next);
+                    let (push_other, other_boxes) = self.boxes_to_move(direction, &other_half);
+                    if !push_half || !push_other {
+                        return INVALID;
                     }
+                    if let Some(list) = half_boxes {
+                        stack.extend(list);
+                    }
+                    if let Some(list) = other_boxes {
+                        stack.extend(list);
+                    }
+                    stack.insert((other_half.clone(), after_other.clone()));
+                    stack.insert((next.clone(), after_half.clone()));
                 }
             },
             Some('.') => return (true, Some(stack)),
-            _ => return (false, None),
+            _ => return INVALID,
         }
         (true, Some(stack))
     }
