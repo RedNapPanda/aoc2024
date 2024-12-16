@@ -147,15 +147,12 @@ impl Grid<Tile> {
         let mut seen = HashSet::new();
         let mut heap = BinaryHeap::new();
         heap.push((0, origin, Direction::East));
-        let mut step = 0;
         while let Some((cost, pos, direction)) = heap.pop() {
             if !seen.insert((pos.clone(), direction.clone())) {
                 continue
             }
-            step += 1;
             match self.get(&pos).unwrap_or(&Tile::Wall) {
                 Tile::End => {
-                    println!("{:?} [{}] | {} | {}", pos, step, direction, cost);
                     min_cost = min_cost.min(-cost);
                 },
                 Tile::Empty | Tile::Reindeer => {
