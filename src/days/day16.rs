@@ -1,12 +1,11 @@
 use crate::utils::grid::Grid;
 use crate::utils::point::Point;
 use itertools::Itertools;
-use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashSet};
 use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let grid = &mut parse(lines);
+    let grid = &mut Grid::parse(lines);
     println!("{}", grid);
     let start = grid
         .iter_enumerate()
@@ -19,16 +18,42 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let grid = parse(lines);
+    let grid = Grid::parse(lines);
     0
 }
 
-fn parse(lines: &[String]) -> Grid<Tile> {
-    Grid {
-        rows: lines
-            .iter()
-            .map(|line| line.chars().flat_map(Tile::try_from).collect_vec())
-            .collect_vec(),
+impl Grid<Tile> {
+    fn parse(lines: &[String]) -> Grid<Tile> {
+        Grid {
+            rows: lines
+                .iter()
+                .map(|line| line.chars().flat_map(Tile::try_from).collect_vec())
+                .collect_vec(),
+        }
+    }
+    
+    fn search(&mut self, origin: Point) -> i64 {
+        let mut min_cost = i64::MAX;
+        let mut seen = HashSet::new();
+        let mut heap = BinaryHeap::new();
+        heap.push((0, origin, Direction::East));
+        while let Some((cost, pos, direction)) = heap.pop() {
+            if !seen.insert((pos.clone(), direction.clone())) {
+                continue
+            }
+            match self.get(&pos).unwrap_or(&Tile::Wall) {
+                Tile::End => {
+                    min_cost = min_cost.min(-cost);
+                },
+                Tile::Empty | Tile::Reindeer => {
+                    heap.push((cost - 1000, pos.clone(), direction.turn_left()));
+                    heap.push((cost - 1000, pos.clone(), direction.turn_right()));
+                    heap.push((cost - 1, &pos + direction.vector(), direction));
+                },
+                _ => {},
+            }
+        }
+        min_cost
     }
 }
 
@@ -138,31 +163,5 @@ impl TryFrom<char> for Tile {
             '#' | '^' | '<' | '>' | 'v' => Ok(Tile::Wall),
             _ => Err(()),
         }
-    }
-}
-
-impl Grid<Tile> {
-    fn search(&mut self, origin: Point) -> i64 {
-        let mut min_cost = i64::MAX;
-        let mut seen = HashSet::new();
-        let mut heap = BinaryHeap::new();
-        heap.push((0, origin, Direction::East));
-        while let Some((cost, pos, direction)) = heap.pop() {
-            if !seen.insert((pos.clone(), direction.clone())) {
-                continue
-            }
-            match self.get(&pos).unwrap_or(&Tile::Wall) {
-                Tile::End => {
-                    min_cost = min_cost.min(-cost);
-                },
-                Tile::Empty | Tile::Reindeer => {
-                    heap.push((cost - 1000, pos.clone(), direction.turn_left()));
-                    heap.push((cost - 1000, pos.clone(), direction.turn_right()));
-                    heap.push((cost - 1, &pos + direction.vector(), direction));
-                },
-                _ => {},
-            }
-        }
-        min_cost
     }
 }
