@@ -106,7 +106,7 @@ impl Grid<char> {
     }
 
     fn shift_boxes(&mut self, robot: &mut Point, movement: &Direction) {
-        let (can_push, stack_opt) = self.boxes_to_move(&movement, &robot);
+        let (can_push, stack_opt) = self.boxes_to_move(movement, robot);
         if !can_push {
             return;
         }
