@@ -116,6 +116,11 @@ impl_ops_ref_copy!(Sub, sub |p: Point, other: (i64, i64)| Point {
     y: p.y - other.1
 });
 
+impl_ops_ref_copy!(Mul, mul |p: Point, other: Point| Point {
+    x: p.x * other.x,
+    y: p.y * other.y
+});
+
 impl_ops_ref_copy!(Mul, mul |p: Point, other: i64| Point {
     x: p.x * other,
     y: p.y * other

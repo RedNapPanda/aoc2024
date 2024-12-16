@@ -11,7 +11,7 @@ pub struct Grid<T> {
 
 impl<T> Display for Grid<T>
 where
-    T: Default + Display + Debug,
+    T: Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         let mut res = Ok(());
@@ -46,6 +46,22 @@ impl<T> Grid<T> {
 
     pub fn iter(&self) -> Iter<'_, Vec<T>> {
         self.rows.iter()
+    }
+
+    pub fn neighbors_cardinal(&self, point: &Point) -> [Point; 4] {
+        [point.left(), point.up(), point.right(), point.down()]
+    }
+    pub fn neighbors_all(&self, point: &Point) -> [Point; 8] {
+        [
+            point.left(),
+            point.left_up(),
+            point.up(),
+            point.right_up(),
+            point.right(),
+            point.right_down(),
+            point.down(),
+            point.left_down(),
+        ]
     }
 
     pub fn iter_enumerate(&self) -> impl Iterator<Item = (Point, &T)> + '_ {

@@ -2,7 +2,7 @@ use crate::utils::grid::Grid;
 use crate::utils::point::Point;
 use itertools::Itertools;
 use std::collections::HashSet;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
     let (mut grid, movements) = parse(lines, false);
@@ -54,10 +54,10 @@ enum Direction {
 impl Display for Direction {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Direction::Left => write!(f, "<"),
-            Direction::Right => write!(f, ">"),
-            Direction::Up => write!(f, "^"),
-            Direction::Down => write!(f, "V"),
+            Direction::Left => f.write_char('<'),
+            Direction::Right => f.write_char('>'),
+            Direction::Up => f.write_char('^'),
+            Direction::Down => f.write_char('V'),
         }
     }
 }
