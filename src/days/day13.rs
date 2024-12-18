@@ -83,10 +83,7 @@ fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
                     regex
                         .captures(l)
                         .map(|c| {
-                            Node::from((
-                                c[1].parse::<i64>().unwrap(),
-                                c[2].parse::<i64>().unwrap(),
-                            ))
+                            Node::from((c[1].parse::<i64>().unwrap(), c[2].parse::<i64>().unwrap()))
                         })
                         .unwrap()
                 })

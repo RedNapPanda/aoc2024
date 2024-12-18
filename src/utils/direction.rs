@@ -1,8 +1,6 @@
-use std::fmt::{Display, Formatter, Write};
-use num::Integer;
 use crate::utils::node::Node;
+use std::fmt::{Display, Formatter, Write};
 
-// ⭠⭡⭢⭣⭦⭧⭨⭩
 #[derive(Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Direction {
     North,
@@ -45,6 +43,7 @@ impl Direction {
 }
 
 impl From<&Direction> for char {
+    // ⭠⭡⭢⭣⭦⭧⭨⭩
     fn from(dir: &Direction) -> Self {
         match dir {
             Direction::North => '⭡',

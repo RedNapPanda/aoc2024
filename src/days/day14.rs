@@ -9,7 +9,7 @@ pub fn solve1(lines: &[String]) -> i64 {
     for robot in &mut robots {
         let x100 = robot.position.x + 100 * robot.velocity.x;
         let y100 = robot.position.y + 100 * robot.velocity.y;
-        robot.position.x = ((x100 % height) + height) % height; 
+        robot.position.x = ((x100 % height) + height) % height;
         robot.position.y = ((y100 % width) + width) % width;
     }
     let mid_height = height / 2;
@@ -30,7 +30,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut grid = Grid::<usize>::with_dimensions(height as usize, width as usize);
     let mut robots = parse(lines);
-    for x in 0..(103*101) {
+    for x in 0..(103 * 101) {
         grid.reset_defaults();
         for robot in &mut robots {
             robot.walk(height, width);

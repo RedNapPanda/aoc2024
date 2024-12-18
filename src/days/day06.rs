@@ -34,7 +34,7 @@ impl Grid<char> {
         (grid.clone(), start)
     }
 
-    fn walk_unique(&self, start: Node) -> impl Iterator<Item =Node> + '_ {
+    fn walk_unique(&self, start: Node) -> impl Iterator<Item = Node> + '_ {
         self.walk(start).0.into_iter().map(|(pos, _)| pos).unique()
     }
 

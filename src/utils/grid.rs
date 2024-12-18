@@ -51,7 +51,7 @@ impl<T> Grid<T> {
     pub fn neighbors_cardinal(&self, point: &Node) -> [Node; 4] {
         [point.left(), point.up(), point.right(), point.down()]
     }
-    pub fn neighbors_all(&self, point: &Node) -> [Node; 8] {
+    pub fn _neighbors_all(&self, point: &Node) -> [Node; 8] {
         [
             point.left(),
             point.left_up(),

@@ -1,14 +1,14 @@
-use std::hash::BuildHasherDefault;
 use indexmap::{IndexMap, IndexSet};
 use rustc_hash::FxHasher;
+use std::hash::BuildHasherDefault;
 
+pub mod astar;
+pub mod direction;
 pub mod grid;
 pub mod input;
 pub mod macros;
 pub mod node;
-pub mod direction;
-pub mod astar;
 
-type BuildFxHasherDefault = BuildHasherDefault<FxHasher>;
-type FxIndexMap<K, V> = IndexMap<K, V, >;
-type FxIndexSet<K> = IndexSet<K, BuildFxHasherDefault>;
+type _BuildFxHasherDefault = BuildHasherDefault<FxHasher>;
+type _FxIndexMap<K, V> = IndexMap<K, V, _BuildFxHasherDefault>;
+type _FxIndexSet<K> = IndexSet<K, _BuildFxHasherDefault>;
