@@ -1,4 +1,4 @@
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use regex::Regex;
 use std::collections::HashSet;
@@ -25,9 +25,9 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 #[derive(Debug, Clone)]
 struct ClawMachine {
-    a_button: Point,
-    b_button: Point,
-    prize: Point,
+    a_button: Node,
+    b_button: Node,
+    prize: Node,
 }
 
 impl ClawMachine {
@@ -83,7 +83,7 @@ fn claw_machines(lines: &[String]) -> Vec<ClawMachine> {
                     regex
                         .captures(l)
                         .map(|c| {
-                            Point::from((
+                            Node::from((
                                 c[1].parse::<i64>().unwrap(),
                                 c[2].parse::<i64>().unwrap(),
                             ))

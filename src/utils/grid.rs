@@ -1,4 +1,4 @@
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use std::fmt::{Debug, Display, Formatter, Result};
 use std::ops::{Index, IndexMut};
@@ -23,14 +23,14 @@ where
 }
 
 impl<T> Grid<T> {
-    pub fn get(&self, point: &Point) -> Option<&T> {
+    pub fn get(&self, point: &Node) -> Option<&T> {
         match self.contains(point) {
             true => Some(&self.rows[point.x as usize][point.y as usize]),
             false => None,
         }
     }
 
-    pub fn set(&mut self, point: &Point, value: T) {
+    pub fn set(&mut self, point: &Node, value: T) {
         if self.contains(point) {
             self.rows[point.x as usize][point.y as usize] = value;
         }
@@ -48,10 +48,10 @@ impl<T> Grid<T> {
         self.rows.iter()
     }
 
-    pub fn neighbors_cardinal(&self, point: &Point) -> [Point; 4] {
+    pub fn neighbors_cardinal(&self, point: &Node) -> [Node; 4] {
         [point.left(), point.up(), point.right(), point.down()]
     }
-    pub fn neighbors_all(&self, point: &Point) -> [Point; 8] {
+    pub fn neighbors_all(&self, point: &Node) -> [Node; 8] {
         [
             point.left(),
             point.left_up(),
@@ -64,11 +64,11 @@ impl<T> Grid<T> {
         ]
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item = (Point, &T)> + '_ {
+    pub fn iter_enumerate(&self) -> impl Iterator<Item = (Node, &T)> + '_ {
         self.iter().enumerate().flat_map(|(x, row)| {
             row.iter()
                 .enumerate()
-                .map(move |(y, v)| (Point::from((x as i64, y as i64)), v))
+                .map(move |(y, v)| (Node::from((x as i64, y as i64)), v))
         })
     }
 }
@@ -105,8 +105,8 @@ pub trait Contains<T> {
     fn contains(&self, other: T) -> bool;
 }
 
-impl<T> Contains<&Point> for Grid<T> {
-    fn contains(&self, other: &Point) -> bool {
+impl<T> Contains<&Node> for Grid<T> {
+    fn contains(&self, other: &Node) -> bool {
         other.x >= 0
             && other.x < self.height() as i64
             && other.y >= 0
@@ -116,7 +116,7 @@ impl<T> Contains<&Point> for Grid<T> {
 
 impl<T> Contains<(i64, i64)> for Grid<T> {
     fn contains(&self, other: (i64, i64)) -> bool {
-        self.contains(&Point::from(other))
+        self.contains(&Node::from(other))
     }
 }
 

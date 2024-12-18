@@ -1,5 +1,5 @@
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use regex::Regex;
 
@@ -85,8 +85,8 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 #[derive(Clone, Debug)]
 struct Robot {
-    position: Point,
-    velocity: Point,
+    position: Node,
+    velocity: Node,
 }
 
 impl Robot {
@@ -123,8 +123,8 @@ fn parse(lines: &[String]) -> Vec<Robot> {
                     let px = captures[2].parse::<i64>().unwrap();
                     let vy = captures[3].parse::<i64>().unwrap();
                     let vx = captures[4].parse::<i64>().unwrap();
-                    let position = Point::from((px, py));
-                    let velocity = Point::from((vx, vy));
+                    let position = Node::from((px, py));
+                    let velocity = Node::from((vx, vy));
                     Robot { position, velocity }
                 })
                 .collect_vec()

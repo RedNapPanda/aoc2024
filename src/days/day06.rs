@@ -1,5 +1,5 @@
 use crate::utils::grid::{Contains, Grid};
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use std::collections::HashSet;
 
@@ -24,7 +24,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 }
 
 impl Grid<char> {
-    fn with_start(lines: &[String]) -> (Self, Point) {
+    fn with_start(lines: &[String]) -> (Self, Node) {
         let grid = &Grid::from(lines);
         let start = grid
             .iter_enumerate()
@@ -34,12 +34,12 @@ impl Grid<char> {
         (grid.clone(), start)
     }
 
-    fn walk_unique(&self, start: Point) -> impl Iterator<Item = Point> + '_ {
+    fn walk_unique(&self, start: Node) -> impl Iterator<Item =Node> + '_ {
         self.walk(start).0.into_iter().map(|(pos, _)| pos).unique()
     }
 
-    fn walk(&self, mut pos: Point) -> (HashSet<(Point, Point)>, bool) {
-        let mut dir = Point::from((-1, 0));
+    fn walk(&self, mut pos: Node) -> (HashSet<(Node, Node)>, bool) {
+        let mut dir = Node::from((-1, 0));
         let mut seen = HashSet::new();
         let mut fast = pos.clone();
         let mut fast_dir = dir.clone();

@@ -1,5 +1,5 @@
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use std::collections::HashSet;
 
@@ -51,7 +51,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 }
 
 impl Grid<char> {
-    fn plots(&self) -> Vec<(i64, Vec<Point>)> {
+    fn plots(&self) -> Vec<(i64, Vec<Node>)> {
         let seen = &mut HashSet::new();
         let mut plots = Vec::new();
         for (pos, &plant) in self.iter_enumerate() {
@@ -69,7 +69,7 @@ impl Grid<char> {
         plots
     }
 
-    fn dfs(&self, plant: char, pos: Point, area: &mut HashSet<Point>) -> i64 {
+    fn dfs(&self, plant: char, pos: Node, area: &mut HashSet<Node>) -> i64 {
         match self.get(&pos) {
             Some(&plot) if plot == plant => {
                 area.insert(pos.clone());

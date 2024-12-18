@@ -1,6 +1,6 @@
 use crate::utils::grid::Contains;
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
@@ -70,7 +70,7 @@ enum Xmas {
 }
 
 impl Xmas {
-    fn points_in_direction(&self, pos: &Point) -> (Point, Point, Point) {
+    fn points_in_direction(&self, pos: &Node) -> (Node, Node, Node) {
         match self {
             Xmas::Right => (pos + (0, 1), pos + (0, 2), pos + (0, 3)),
             Xmas::Left => (pos + (0, -1), pos + (0, -2), pos + (0, -3)),

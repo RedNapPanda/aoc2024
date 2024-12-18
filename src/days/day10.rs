@@ -1,5 +1,5 @@
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use std::collections::HashSet;
 
@@ -20,7 +20,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 }
 
 impl Grid<usize> {
-    fn solve(&self, trail_head: &Point, part2: bool) -> i64 {
+    fn solve(&self, trail_head: &Node, part2: bool) -> i64 {
         let mut count = 0;
         let mut seen = HashSet::new();
         let mut stack = Vec::new();
@@ -39,7 +39,7 @@ impl Grid<usize> {
         count
     }
 
-    fn get_trail_heads(&self) -> Vec<Point> {
+    fn get_trail_heads(&self) -> Vec<Node> {
         self.iter_enumerate()
             .filter_map(|(p, x)| match x {
                 0 => Some(p),
@@ -48,7 +48,7 @@ impl Grid<usize> {
             .collect_vec()
     }
 
-    fn walk(&self, stack: &mut Vec<Point>, pos: Point, cur: usize) {
+    fn walk(&self, stack: &mut Vec<Node>, pos: Node, cur: usize) {
         for p in [pos.left(), pos.right(), pos.up(), pos.down()] {
             if let Some(&next) = self.get(&p) {
                 if next > cur && next - cur == 1 {

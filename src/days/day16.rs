@@ -1,24 +1,87 @@
+use crate::utils::astar::astar;
+use crate::utils::direction::Direction;
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
-use std::collections::{BinaryHeap, HashSet};
+use rustc_hash::FxHashSet;
+use std::collections::BinaryHeap;
 use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let grid = &mut Grid::parse(lines);
-    println!("{}", grid);
-    let start = grid
-        .iter_enumerate()
-        .find(|&(_, tile)| *tile == Tile::Reindeer)
-        .map(|(p, _)| p)
-        .unwrap();
-    let cost = grid.search(start);
-    println!("{}", grid);
-    cost
+    let grid = Grid::parse(lines);
+    let start = grid.start();
+    let mut min_cost = None;
+    let mut seen = FxHashSet::default();
+    let mut heap = BinaryHeap::new();
+    heap.push((0, start, Direction::East));
+    while let Some((cost, pos, direction)) = heap.pop() {
+        if min_cost.is_some_and(|mc| mc < -cost) {
+            continue;
+        }
+        if !seen.insert((pos.clone(), direction.clone())) {
+            continue;
+        }
+        match grid.get(&pos).unwrap_or(&Tile::Wall) {
+            Tile::End => {
+                min_cost = Some(-cost);
+            }
+            Tile::Empty | Tile::Reindeer => {
+                heap.push((cost - 1000, pos.clone(), direction.turn_left()));
+                heap.push((cost - 1000, pos.clone(), direction.turn_right()));
+                heap.push((cost - 1, &pos + direction.vector(), direction));
+            }
+            _ => {}
+        }
+    }
+    min_cost.unwrap_or(0)
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let grid = Grid::parse(lines);
+    let mut grid = Grid::parse(lines);
+    let start = grid.start();
+    let result = astar(
+        &(start, Direction::East),
+        |(node, dir)| {
+            grid.neighbors_cardinal(node)
+                .iter()
+                .filter_map(|neighbor| {
+                    let new_dir = Direction::from(neighbor - node);
+                    if new_dir == dir.inverse()
+                        || grid
+                            .get(neighbor)
+                            .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
+                    {
+                        return None;
+                    }
+                    Some((neighbor.clone(), new_dir))
+                })
+                .collect_vec()
+        },
+        |prev, cur| {
+            if cur.1 == prev.1 {
+                1
+            } else {
+                1001
+            }
+        },
+        |_, _| 0,
+        |(node, _)| grid.get(node).is_some_and(|tile| tile == &Tile::End),
+    );
+
+    if let Some((cost, end_nodes, paths)) = result {
+        println!("Costs: {}", cost);
+        let collect = Vec::new();
+        for (node, _) in end_nodes {
+            let mut vec = Vec::new();
+            vec.push(node);
+            loop {
+                let parents = match vec.last() {
+                    Some(node) => paths.get(node).unwrap().parents,
+                    _ => break,
+                }
+            }
+        }
+    }
     0
 }
 
@@ -31,109 +94,22 @@ impl Grid<Tile> {
                 .collect_vec(),
         }
     }
-    
-    fn search(&mut self, origin: Point) -> i64 {
-        let mut min_cost = i64::MAX;
-        let mut seen = HashSet::new();
-        let mut heap = BinaryHeap::new();
-        heap.push((0, origin, Direction::East));
-        while let Some((cost, pos, direction)) = heap.pop() {
-            if !seen.insert((pos.clone(), direction.clone())) {
-                continue
-            }
-            match self.get(&pos).unwrap_or(&Tile::Wall) {
-                Tile::End => {
-                    min_cost = min_cost.min(-cost);
-                },
-                Tile::Empty | Tile::Reindeer => {
-                    heap.push((cost - 1000, pos.clone(), direction.turn_left()));
-                    heap.push((cost - 1000, pos.clone(), direction.turn_right()));
-                    heap.push((cost - 1, &pos + direction.vector(), direction));
-                },
-                _ => {},
-            }
-        }
-        min_cost
+
+    fn start(&self) -> Node {
+        self.iter_enumerate()
+            .find(|&(_, tile)| *tile == Tile::Reindeer)
+            .map(|(p, _)| p)
+            .unwrap()
     }
 }
 
-#[derive(Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
-enum Direction {
-    North,
-    South,
-    East,
-    West,
-}
-
-impl Direction {
-    fn inverse(&self) -> Self {
-        match self {
-            Direction::North => Direction::South,
-            Direction::South => Direction::North,
-            Direction::East => Direction::West,
-            Direction::West => Direction::East,
-        }
-    }
-    
-    fn turn_left(&self) -> Self {
-        match self {
-            Direction::North => Direction::West,
-            Direction::South => Direction::East,
-            Direction::East => Direction::North,
-            Direction::West => Direction::South,
-        }
-    }
-    
-    fn turn_right(&self) -> Self {
-        self.turn_left().inverse()
-    }
-    
-    fn vector(&self) -> Point {
-        match self {
-            Direction::North => Point { x: -1, y: 0 },
-            Direction::South => Point { x: 1, y: 0 },
-            Direction::East => Point { x: 0, y: 1 },
-            Direction::West => Point { x: 0, y: -1 },
-        }
-    }
-}
-
-impl From<&Direction> for char {
-    fn from(dir: &Direction) -> Self {
-        match dir {
-            Direction::North => '^',
-            Direction::South => 'v',
-            Direction::East => '>',
-            Direction::West => '<',
-        }
-    }
-}
-
-impl Display for Direction {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.write_char(char::from(self))
-    }
-}
-
-impl From<Point> for Direction {
-    fn from(value: Point) -> Self {
-        match value {
-            Point { x: 0, y: 0 } => panic!("Not a vector"),
-            Point { x, y: 0 } if x < 0 => Direction::North,
-            Point { x, y: 0 } if x > 0 => Direction::South,
-            Point { x: 0, y } if y > 0 => Direction::East,
-            Point { x: 0, y } if y < 0 => Direction::West,
-            _ => panic!("diagonals not implemented"),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 enum Tile {
     Reindeer,
     End,
     Empty,
     Wall,
+    Steps,
 }
 
 impl Display for Tile {
@@ -149,6 +125,7 @@ impl From<&Tile> for char {
             Tile::End => 'E',
             Tile::Empty => '.',
             Tile::Wall => '#',
+            Tile::Steps => 'O',
         }
     }
 }

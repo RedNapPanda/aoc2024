@@ -1,5 +1,5 @@
 use crate::utils::grid::Grid;
-use crate::utils::point::Point;
+use crate::utils::node::Node;
 use itertools::Itertools;
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter, Write};
@@ -63,12 +63,12 @@ impl Display for Direction {
 }
 
 impl Direction {
-    fn vector(&self) -> Point {
+    fn vector(&self) -> Node {
         match self {
-            Direction::Left => Point { x: 0, y: -1 },
-            Direction::Right => Point { x: 0, y: 1 },
-            Direction::Up => Point { x: -1, y: 0 },
-            Direction::Down => Point { x: 1, y: 0 },
+            Direction::Left => Node { x: 0, y: -1 },
+            Direction::Right => Node { x: 0, y: 1 },
+            Direction::Up => Node { x: -1, y: 0 },
+            Direction::Down => Node { x: 1, y: 0 },
         }
     }
 }
@@ -96,7 +96,7 @@ impl Grid<char> {
             .sum()
     }
 
-    fn find_robot(&self) -> Point {
+    fn find_robot(&self) -> Node {
         self.iter_enumerate()
             .find_map(|(point, char)| match char {
                 '@' => Some(point),
@@ -105,7 +105,7 @@ impl Grid<char> {
             .unwrap()
     }
 
-    fn shift_boxes(&mut self, robot: &mut Point, movement: &Direction) {
+    fn shift_boxes(&mut self, robot: &mut Node, movement: &Direction) {
         let (can_push, stack_opt) = self.boxes_to_move(movement, robot);
         if !can_push {
             return;
@@ -132,9 +132,9 @@ impl Grid<char> {
     fn boxes_to_move(
         &mut self,
         direction: &Direction,
-        pos: &Point,
-    ) -> (bool, Option<HashSet<(Point, Point)>>) {
-        const INVALID: (bool, Option<HashSet<(Point, Point)>>) = (false, None);
+        pos: &Node,
+    ) -> (bool, Option<HashSet<(Node, Node)>>) {
+        const INVALID: (bool, Option<HashSet<(Node, Node)>>) = (false, None);
         if self.get(pos).is_none_or(|&c| c == '#') {
             return INVALID;
         }
