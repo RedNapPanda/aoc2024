@@ -58,10 +58,10 @@ where
                         path_node.parents.clear();
                         path_node.cost = new_cost;
                     }
-                    path_node.parents.insert(node.clone());
                     if new_cost >= path_node.cost {
                         continue
                     }
+                    path_node.parents.insert(node.clone());
                 }
                 Entry::Vacant(entry) => {
                     let mut parents = FxHashSet::default();
