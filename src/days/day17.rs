@@ -18,7 +18,15 @@ pub fn solve1(lines: &[String]) -> i64 {
 
 pub fn solve2(lines: &[String]) -> i64 {
     let mut program = Program::from(lines);
-    program.reverse_operate(0, 0).unwrap() as i64
+    /*
+    My input program essentially boils down to the following:
+        A ... -> B
+        OUT B % 8
+        A / 3 -> A
+        LOOP if A > 0
+        END
+     */
+    program.self_replication(0, 0).unwrap() as i64
 }
 
 #[derive(Debug)]
@@ -63,7 +71,7 @@ impl Program {
         result
     }
     
-    fn reverse_operate(&mut self, index: u128, next: u128) -> Option<u128> {
+    fn self_replication(&mut self, index: u128, next: u128) -> Option<u128> {
         let prev_a = next * 8;
         for i in 0..8 {
             let possible_a = prev_a + i;
@@ -77,7 +85,7 @@ impl Program {
                     if prog_index == 0 {
                         return Some(possible_a)
                     }
-                    let result= self.reverse_operate(index + 1, possible_a);
+                    let result= self.self_replication(index + 1, possible_a);
                     if result.is_some() {
                         return result
                     }
