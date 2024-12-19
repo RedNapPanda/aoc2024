@@ -7,13 +7,13 @@ use itertools::Itertools;
 use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
-    Grid::parse(lines)
-        .find_paths(false)
-        .map_or(0, |result| result.cost)
+    let grid = &parse(lines);
+    find_paths(grid, false).map_or(0, |result| result.cost)
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    Grid::parse(lines).find_paths(true).map_or(0, |result| {
+    let grid = &parse(lines);
+    find_paths(grid, true).map_or(0, |result| {
         result
             .collect()
             .iter()
@@ -24,48 +24,46 @@ pub fn solve2(lines: &[String]) -> i64 {
     }) as i64
 }
 
-impl Grid<Tile> {
-    fn parse(lines: &[String]) -> Grid<Tile> {
-        Grid {
-            rows: lines
+fn parse(lines: &[String]) -> Grid<Tile> {
+    Grid {
+        rows: lines
+            .iter()
+            .map(|line| line.chars().flat_map(Tile::try_from).collect_vec())
+            .collect_vec(),
+    }
+}
+
+fn start(grid: &Grid<Tile>) -> Node {
+    grid.iter_enumerate()
+        .find(|&(_, tile)| *tile == Tile::Reindeer)
+        .map(|(p, _)| p)
+        .unwrap()
+}
+
+fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node, Direction), i64>> {
+    astar(
+        &(start(grid), Direction::East),
+        |(node, dir)| {
+            grid.neighbors_cardinal(node)
                 .iter()
-                .map(|line| line.chars().flat_map(Tile::try_from).collect_vec())
-                .collect_vec(),
-        }
-    }
-
-    fn start(&self) -> Node {
-        self.iter_enumerate()
-            .find(|&(_, tile)| *tile == Tile::Reindeer)
-            .map(|(p, _)| p)
-            .unwrap()
-    }
-
-    fn find_paths(&self, part2: bool) -> Option<PathResult<(Node, Direction), i64>> {
-        astar(
-            &(self.start(), Direction::East),
-            |(node, dir)| {
-                self.neighbors_cardinal(node)
-                    .iter()
-                    .filter_map(|neighbor| {
-                        let new_dir = Direction::from(neighbor - node);
-                        if new_dir == dir.inverse()
-                            || self
+                .filter_map(|neighbor| {
+                    let new_dir = Direction::from(neighbor - node);
+                    if new_dir == dir.inverse()
+                        || grid
                             .get(neighbor)
                             .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
-                        {
-                            return None;
-                        }
-                        Some((neighbor.clone(), new_dir))
-                    })
-                    .collect_vec()
-            },
-            |prev, cur| 1 + (1000 * (cur.1 != prev.1) as i64),
-            |_, _| 0,
-            |(node, _)| self.get(node).is_some_and(|tile| tile == &Tile::End),
-            part2,
-        )
-    }
+                    {
+                        return None;
+                    }
+                    Some((neighbor.clone(), new_dir))
+                })
+                .collect_vec()
+        },
+        |prev, cur| 1 + (1000 * (cur.1 != prev.1) as i64),
+        |_, _| 0,
+        |(node, _)| grid.get(node).is_some_and(|tile| tile == &Tile::End),
+        part2,
+    )
 }
 
 #[derive(Debug, PartialEq, Clone)]
