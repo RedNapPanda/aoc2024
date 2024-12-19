@@ -1,24 +1,23 @@
+use itertools::Itertools;
 use rustc_hash::FxHashSet;
 use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
     let towel_designs = TowelDesigns::from(lines);
-    let mut count = 0;
-    for towel_design in towel_designs.designs.iter() {
-        if towel_designs.total_ways(towel_design) > 0 {
-            count += 1;    
-        }
-    }
-    count
+    towel_designs
+        .designs
+        .iter()
+        .filter(|design| towel_designs.total_ways(design) > 0)
+        .count() as i64
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
     let towel_designs = TowelDesigns::from(lines);
-    let mut count = 0;
-    for towel_design in towel_designs.designs.iter() {
-        count += towel_designs.total_ways(towel_design);
-    }
-    count
+    towel_designs
+        .designs
+        .iter()
+        .map(|design| towel_designs.total_ways(design))
+        .sum()
 }
 
 #[derive(Debug)]
@@ -32,17 +31,17 @@ impl TowelDesigns {
         let mut matches = vec![0; design.len() + 1];
         matches[0] = 1;
         for i in 1..=design.len() {
-            for pattern in &self.available {
-                let p_len = pattern.len();
-                if i < p_len {
-                    continue;
-                }
-                if let Some(s) = design.get((i - p_len)..i) {
-                    if s == pattern {
-                        matches[i] += matches[i - p_len];
+            matches[i] = self
+                .available
+                .iter()
+                .map(|s| {
+                    let len = s.len();
+                    if i >= len && s == &design[(i - len)..i] {
+                        return matches[i - len];
                     }
-                }
-            }
+                    0
+                })
+                .sum::<i64>();
         }
         *matches.last().unwrap()
     }
