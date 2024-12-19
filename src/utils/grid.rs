@@ -38,6 +38,7 @@ impl<T> Grid<T> {
     pub fn neighbors_cardinal(&self, point: &Node) -> [Node; 4] {
         [point.left(), point.up(), point.right(), point.down()]
     }
+    
     pub fn _neighbors_all(&self, point: &Node) -> [Node; 8] {
         [
             point.left(),
@@ -67,6 +68,14 @@ where
     pub fn with_default(height: usize, width: usize, default: T) -> Self {
         Grid {
             rows: vec![vec![default; width]; height],
+        }
+    }
+
+    pub fn reset(&mut self, default: T) {
+        for i in 0..self.height() {
+            for j in 0..self.width() {
+                self.rows[i][j] = default.clone()
+            }
         }
     }
 }

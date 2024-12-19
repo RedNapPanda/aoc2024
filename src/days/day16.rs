@@ -1,7 +1,8 @@
-use crate::utils::astar::{astar, AStarResult};
+use crate::utils::algo::astar::astar;
 use crate::utils::direction::Direction;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
+use crate::utils::PathResult;
 use itertools::Itertools;
 use std::fmt::{Display, Formatter, Write};
 
@@ -40,7 +41,7 @@ impl Grid<Tile> {
             .unwrap()
     }
 
-    fn find_paths(&self, part2: bool) -> Option<AStarResult<(Node, Direction), i64>> {
+    fn find_paths(&self, part2: bool) -> Option<PathResult<(Node, Direction), i64>> {
         astar(
             &(self.start(), Direction::East),
             |(node, dir)| {

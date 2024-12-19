@@ -6,6 +6,7 @@ use std::collections::hash_map::Entry;
 use std::collections::BinaryHeap;
 use std::fmt::Debug;
 use std::hash::Hash;
+use crate::utils::{PathNode, PathResult};
 
 pub fn astar<N, IN, FN, C, FC, FH, FE>(
     start: &N,
@@ -14,7 +15,7 @@ pub fn astar<N, IN, FN, C, FC, FH, FE>(
     heuristic_fn: FH,
     end_fn: FE,
     find_all: bool,
-) -> Option<AStarResult<N, C>>
+) -> Option<PathResult<N, C>>
 where
     N: Eq + Hash + Clone + Debug,
     IN: IntoIterator<Item = N>,
@@ -27,9 +28,9 @@ where
     let mut min_cost: Option<C> = None;
     let mut end_nodes: Vec<N> = Vec::new();
     let mut heap: BinaryHeap<LowestCostNode<N, C>> = BinaryHeap::new();
-    let mut parent_nodes: FxHashMap<N, PathNode<N, C>> = FxHashMap::default();
+    let mut visited: FxHashMap<N, PathNode<N, C>> = FxHashMap::default();
     heap.push(LowestCostNode::new(start.clone(), num::zero(), num::zero()));
-    parent_nodes.insert(
+    visited.insert(
         start.clone(),
         PathNode::new(num::zero(), FxHashSet::default()),
     );
@@ -37,7 +38,7 @@ where
         if min_cost.is_some_and(|min_cost| min_cost < cost) {
             break;
         }
-        let path_node = parent_nodes.get(&node).unwrap();
+        let path_node = visited.get(&node).unwrap();
         if path_node.cost < cost {
             continue;
         }
@@ -53,7 +54,7 @@ where
         for neighbor in neighbors_fn(&node) {
             let new_cost = cost + cost_fn(&node, &neighbor);
             let heuristic = heuristic_fn(&node, &neighbor);
-            match parent_nodes.entry(neighbor.clone()) {
+            match visited.entry(neighbor.clone()) {
                 Entry::Occupied(mut entry) => {
                     let path_node = entry.get_mut();
                     if new_cost < path_node.cost {
@@ -77,25 +78,14 @@ where
             heap.push(LowestCostNode::new(neighbor.clone(), new_cost, heuristic));
         }
     }
-    min_cost.map(|cost| AStarResult {
+    min_cost.map(|cost| PathResult {
         cost,
         end_nodes,
-        parent_nodes,
+        visited,
     })
 }
 
-#[derive(Debug, Clone)]
-pub struct AStarResult<N, C>
-where
-    N: Eq + Hash + Clone + Debug,
-    C: Zero + Copy + Ord,
-{
-    pub cost: C,
-    pub end_nodes: Vec<N>,
-    pub parent_nodes: FxHashMap<N, PathNode<N, C>>,
-}
-
-impl<N, C> AStarResult<N, C>
+impl<N, C> PathResult<N, C>
 where
     N: Eq + Hash + Clone + Debug,
     C: Zero + Copy + Ord,
@@ -122,7 +112,7 @@ where
                 Some(nodes) => nodes.last(),
                 _ => return,
             }
-            .and_then(|node| self.parent_nodes.get(node))
+            .and_then(|node| self.visited.get(node))
             .map(move |path_node| &path_node.parents);
             if parents.is_none_or(|parents| parents.is_empty()) {
                 return;
@@ -136,26 +126,6 @@ where
             sink.pop();
         }
         sink.last_mut().map(Vec::pop);
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct PathNode<N, C>
-where
-    N: Eq + Hash + Clone + Debug,
-    C: Zero + Copy + Ord,
-{
-    pub cost: C,
-    pub parents: FxHashSet<N>,
-}
-
-impl<N, C> PathNode<N, C>
-where
-    N: Eq + Hash + Clone + Debug,
-    C: Zero + Copy + Ord,
-{
-    fn new(cost: C, parents: FxHashSet<N>) -> Self {
-        Self { cost, parents }
     }
 }
 
