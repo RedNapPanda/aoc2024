@@ -34,7 +34,7 @@ fn parse(lines: &[String], part2: bool) -> (Grid<char>, Vec<Direction>) {
                     .collect_vec()
             })
             .collect_vec();
-        Grid { rows }
+        Grid { rows: rows }
     };
     let movements = lines[(newline + 1)..]
         .iter()

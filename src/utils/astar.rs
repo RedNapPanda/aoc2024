@@ -13,6 +13,7 @@ pub fn astar<N, IN, FN, C, FC, FH, FE>(
     cost_fn: FC,
     heuristic_fn: FH,
     end_fn: FE,
+    find_all: bool,
 ) -> Option<AStarResult<N, C>>
 where
     N: Eq + Hash + Clone + Debug,
@@ -43,7 +44,11 @@ where
         if end_fn(&node) {
             min_cost = Some(cost);
             end_nodes.push(node);
-            continue;
+            if find_all {
+                continue;
+            } else {
+                break;
+            }
         }
         for neighbor in neighbors_fn(&node) {
             let new_cost = cost + cost_fn(&node, &neighbor);

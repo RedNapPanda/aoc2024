@@ -7,12 +7,12 @@ use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
     Grid::parse(lines)
-        .find_paths()
+        .find_paths(false)
         .map_or(0, |result| result.cost)
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    Grid::parse(lines).find_paths().map_or(0, |result| {
+    Grid::parse(lines).find_paths(true).map_or(0, |result| {
         result
             .collect()
             .iter()
@@ -40,7 +40,7 @@ impl Grid<Tile> {
             .unwrap()
     }
 
-    fn find_paths(&self) -> Option<AStarResult<(Node, Direction), i64>> {
+    fn find_paths(&self, part2: bool) -> Option<AStarResult<(Node, Direction), i64>> {
         astar(
             &(self.start(), Direction::East),
             |(node, dir)| {
@@ -50,8 +50,8 @@ impl Grid<Tile> {
                         let new_dir = Direction::from(neighbor - node);
                         if new_dir == dir.inverse()
                             || self
-                                .get(neighbor)
-                                .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
+                            .get(neighbor)
+                            .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
                         {
                             return None;
                         }
@@ -62,6 +62,7 @@ impl Grid<Tile> {
             |prev, cur| 1 + (1000 * (cur.1 != prev.1) as i64),
             |_, _| 0,
             |(node, _)| self.get(node).is_some_and(|tile| tile == &Tile::End),
+            part2,
         )
     }
 }

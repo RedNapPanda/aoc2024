@@ -20,6 +20,10 @@ where
 }
 
 impl Node {
+    pub fn new(x: i64, y: i64) -> Self {
+        Self { x, y }
+    }
+    
     pub fn left(&self) -> Self {
         Self {
             x: self.x,

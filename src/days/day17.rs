@@ -9,9 +9,7 @@ pub fn solve1(lines: &[String]) -> i64 {
             output.push(val);
         }
     }
-    println!("{}", program);
-    println!("Output: {}", output.iter().join(","));
-    
+    println!("Solution: {}", output.iter().join(","));
     // todo: support non integer value returns for solves
     output.into_iter().join("").parse::<i64>().unwrap()
 }
@@ -70,7 +68,7 @@ impl Program {
         }
         result
     }
-    
+
     fn self_replication(&mut self, index: u128, next: u128) -> Option<u128> {
         let prev_a = next * 8;
         for i in 0..8 {

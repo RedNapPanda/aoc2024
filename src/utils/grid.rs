@@ -9,19 +9,6 @@ pub struct Grid<T> {
     pub rows: Vec<Vec<T>>,
 }
 
-impl<T> Display for Grid<T>
-where
-    T: Display,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        let mut res = Ok(());
-        for row in &self.rows {
-            res = res.and_then(|_| writeln!(f, "{}", row.iter().join("")));
-        }
-        res
-    }
-}
-
 impl<T> Grid<T> {
     pub fn get(&self, point: &Node) -> Option<&T> {
         match self.contains(point) {
@@ -75,6 +62,17 @@ impl<T> Grid<T> {
 
 impl<T> Grid<T>
 where
+    T: Clone,
+{
+    pub fn with_default(height: usize, width: usize, default: T) -> Self {
+        Grid {
+            rows: vec![vec![default; width]; height],
+        }
+    }
+}
+
+impl<T> Grid<T>
+where
     T: Default + Clone,
 {
     pub fn with_dimensions(height: usize, width: usize) -> Self {
@@ -89,6 +87,30 @@ where
                 self.rows[i][j] = T::default()
             }
         }
+    }
+}
+
+impl<T> Grid<T>
+where
+    T: Debug + Default + Clone,
+{
+    pub fn _new(height: usize, width: usize) -> Self {
+        Grid {
+            rows: vec![vec![T::default(); width]; height],
+        }
+    }
+}
+
+impl<T> Display for Grid<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let mut res = Ok(());
+        for row in &self.rows {
+            res = res.and_then(|_| writeln!(f, "{}", row.iter().join("")));
+        }
+        res
     }
 }
 
