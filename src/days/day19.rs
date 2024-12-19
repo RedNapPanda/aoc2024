@@ -27,6 +27,10 @@ struct TowelDesigns {
 }
 
 impl TowelDesigns {
+    // fn can_craft(&self, design: &str) -> i64 {
+    //     
+    // }
+
     fn total_ways(&self, design: &str) -> i64 {
         let mut matches = vec![0; design.len() + 1];
         matches[0] = 1;
