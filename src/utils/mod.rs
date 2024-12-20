@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use indexmap::{IndexMap, IndexSet};
-use rustc_hash::{FxHashMap, FxHashSet, FxHasher};
+use rustc_hash::{FxHashMap, FxHasher};
 use std::hash::{BuildHasherDefault, Hash};
 use num::Zero;
 

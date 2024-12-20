@@ -35,8 +35,8 @@ impl<T> Grid<T> {
     pub fn iter(&self) -> Iter<'_, Vec<T>> {
         self.rows.iter()
     }
-    
-    pub fn nodes_in_direction(&self, point: &Node, dir: Direction, len: usize) -> Vec<Node> {
+
+    pub fn _nodes_in_direction(&self, point: &Node, dir: Direction, len: usize) -> Vec<Node> {
         let vector = &dir.vector();
         let mut vec = vec![];
         for i in 0..len as i64 {

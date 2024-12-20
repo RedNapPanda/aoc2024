@@ -1,6 +1,6 @@
 use itertools::Itertools;
 use num::Zero;
-use rustc_hash::{FxHashMap, FxHashSet};
+use rustc_hash::FxHashMap;
 use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::BinaryHeap;

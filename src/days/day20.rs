@@ -2,11 +2,7 @@ use crate::utils::algo::astar::astar;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
 use crate::utils::PathResult;
-use itertools::Itertools;
-use rustc_hash::FxHashSet;
-use std::collections::VecDeque;
 use std::fmt::{Display, Formatter, Write};
-use strum::IntoEnumIterator;
 
 pub fn solve1(lines: &[String]) -> i64 {
     solve(lines, 2)
@@ -16,7 +12,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     solve(lines, 20)
 }
 
-fn solve(lines: &[String], jump: i64) -> i64 {
+fn solve(lines: &[String], max_steps: i64) -> i64 {
     let grid = &mut Grid::<Tile>::from(lines);
     let start = start(grid);
     let mut count = 0;
@@ -30,45 +26,39 @@ fn solve(lines: &[String], jump: i64) -> i64 {
                                 false,
     ) {
         for node in &result.first() {
-            let cost = result.visited.get(node).unwrap().cost;
-            count += bfs(grid, &result, node, cost, jump, 100);
+            count += diamond_search(grid,
+                                    &result,
+                                    node,
+                                    result.visited.get(node).unwrap().cost,
+                                    max_steps,
+                                    100,
+            );
         }
     }
     count
 }
 
-fn bfs(grid: &Grid<Tile>, result: &PathResult<Node, i64>, start: &Node, cost: i64, max_steps: i64, min_saved: i64) -> i64 {
+fn diamond_search(grid: &Grid<Tile>, result: &PathResult<Node, i64>, start: &Node, cost: i64, max_steps: i64, min_saved: i64) -> i64 {
     let mut count = 0;
-    let mut pair_seen = FxHashSet::default();
-    let mut seen = FxHashSet::default();
-    let mut deque = VecDeque::new();
-    deque.push_back((start.clone(), 0i64));
-    while let Some((node, steps)) = deque.pop_front() {
-        if steps > max_steps {
-            continue;
-        }
-        seen.insert(node.clone());
-        if let Some(tile) = grid.get(&node) {
-            if tile == &Tile::Empty || tile == &Tile::End {
-                let pair = (start, node.clone());
-                if pair_seen.contains(&pair) {
-                    continue;
-                }
-                let skip_cost = result.visited.get(&node).unwrap().cost;
-                let saved = skip_cost - cost - steps;
-                if saved >= min_saved {
-                    count += 1;
-                }
-                pair_seen.insert(pair);
+    (-max_steps..=max_steps).for_each(|x| {
+        let dist_left = max_steps - x.abs();
+        (-dist_left..=dist_left).for_each(|y| {
+            let steps = x.abs() + y.abs();
+            if steps > max_steps {
+                return;
             }
-            grid.neighbors_cardinal(&node)
-                .iter()
-                .filter(|&n| !seen.contains(n))
-                .for_each(|n| deque.push_back((n.clone(), steps + 1)));
-        } else {
-            continue;
-        }
-    }
+            let node = Node::new(start.x + x, start.y + y);
+            if let Some(tile) = grid.get(&node) {
+                if tile == &Tile::Empty || tile == &Tile::End {
+                    let skip_cost = result.visited.get(&node).unwrap().cost;
+                    let saved = skip_cost - cost - steps;
+                    if saved >= min_saved {
+                        count += 1;
+                    }
+                }
+            }
+        })
+    });
     count
 }
 
