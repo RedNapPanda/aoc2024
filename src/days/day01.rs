@@ -25,7 +25,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .sum()
 }
 
-fn parse(lines: &[String]) -> impl Iterator<Item = (i64, i64)> + '_ {
+fn parse(lines: &[String]) -> impl Iterator<Item=(i64, i64)> + '_ {
     lines
         .iter()
         .map(|line| line.split_once("   ").unwrap())

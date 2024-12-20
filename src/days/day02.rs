@@ -16,7 +16,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 }
 fn build_levels(
     lines: &[String],
-) -> impl Iterator<Item = impl Iterator<Item = i64> + Clone + '_> + '_ {
+) -> impl Iterator<Item=impl Iterator<Item=i64> + Clone + '_> + '_ {
     lines
         .iter()
         .map(|line| line.split_whitespace().map(|s| s.parse::<i64>().unwrap()))
@@ -24,7 +24,7 @@ fn build_levels(
 
 fn is_valid_skip<I>(levels: I, skip: Option<usize>) -> bool
 where
-    I: Iterator<Item = i64> + Clone,
+    I: Iterator<Item=i64> + Clone,
 {
     let mut iter = levels
         .clone()

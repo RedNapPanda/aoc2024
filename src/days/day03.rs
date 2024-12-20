@@ -20,6 +20,6 @@ pub fn solve2(lines: &[String]) -> i64 {
         .0
 }
 
-fn parse<'a>(lines: &'a [String], regex: &'a Regex) -> impl Iterator<Item = Captures<'a>> + 'a {
+fn parse<'a>(lines: &'a [String], regex: &'a Regex) -> impl Iterator<Item=Captures<'a>> + 'a {
     lines.iter().flat_map(move |l| regex.captures_iter(l))
 }

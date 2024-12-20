@@ -1,8 +1,8 @@
-use std::ops::Range;
 use crate::utils::algo::astar::astar;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
 use crate::utils::PathResult;
+use std::ops::Range;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let size = 71;
@@ -10,7 +10,7 @@ pub fn solve1(lines: &[String]) -> i64 {
     let mut grid = Grid::with_default(size, size, '.');
     set_walls(&mut grid, lines, 0..cutoff);
     if let Some(result) = scan(&grid, size) {
-        return result.cost as i64
+        return result.cost as i64;
     }
     0
 }
@@ -37,7 +37,7 @@ pub fn solve2(lines: &[String]) -> i64 {
             midpoint = left + (midpoint - left) / 2;
         }
     }
-    println!("Solution: {}", lines[first.unwrap()-1]);
+    println!("Solution: {}", lines[first.unwrap() - 1]);
     0
 }
 

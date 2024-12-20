@@ -50,9 +50,9 @@ pub fn solve2(lines: &[String]) -> i64 {
             left_up_c != right_down_c
                 && left_down_c != right_up_c
                 && (left_down_c == 'M' && right_up_c == 'S'
-                    || left_down_c == 'S' && right_up_c == 'M')
+                || left_down_c == 'S' && right_up_c == 'M')
                 && (left_up_c == 'M' && right_down_c == 'S'
-                    || left_up_c == 'S' && right_down_c == 'M')
+                || left_up_c == 'S' && right_down_c == 'M')
         })
         .count() as i64
 }

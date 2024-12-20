@@ -59,7 +59,7 @@ impl Program {
                 Opcode::Jnz => {
                     if self.reg_a != 0 {
                         self.index = operand as usize;
-                        break
+                        break;
                     }
                 }
                 Opcode::Out => result = Some(combo % 8),
@@ -81,11 +81,11 @@ impl Program {
                 let prog_index = self.program.len() - 1 - index as usize;
                 if output == self.program[prog_index] {
                     if prog_index == 0 {
-                        return Some(possible_a)
+                        return Some(possible_a);
                     }
-                    let result= self.self_replication(index + 1, possible_a);
+                    let result = self.self_replication(index + 1, possible_a);
                     if result.is_some() {
-                        return result
+                        return result;
                     }
                 }
             }

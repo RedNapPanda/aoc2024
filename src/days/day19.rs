@@ -1,5 +1,5 @@
-use regex::Regex;
 use itertools::Itertools;
+use regex::Regex;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let towel_designs = TowelDesigns::from(lines);
@@ -27,7 +27,7 @@ struct TowelDesigns {
 }
 
 impl TowelDesigns {
-    fn total_ways(&self, design: &str ) -> i64 {
+    fn total_ways(&self, design: &str) -> i64 {
         let mut matches = vec![0; design.len() + 1];
         matches[0] = 1;
         for i in 1..=design.len() {

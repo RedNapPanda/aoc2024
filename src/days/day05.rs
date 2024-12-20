@@ -50,7 +50,7 @@ fn filter_updates<'a>(
     graph: &'a FxHashMap<&'a str, FxHashSet<&'a str>>,
     updates: &'a [String],
     part2: bool,
-) -> impl Iterator<Item = (Split<'a, &'a str>, usize)> + 'a {
+) -> impl Iterator<Item=(Split<'a, &'a str>, usize)> + 'a {
     let mut seen = FxHashSet::default();
     updates
         .iter()
@@ -68,7 +68,7 @@ fn filter_updates<'a>(
 
 fn is_valid<'a>(
     graph: &FxHashMap<&str, FxHashSet<&str>>,
-    mut update: impl Iterator<Item = &'a str>,
+    mut update: impl Iterator<Item=&'a str>,
     seen: &mut FxHashSet<&'a str>,
 ) -> bool {
     seen.clear();

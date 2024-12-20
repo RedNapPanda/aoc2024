@@ -50,8 +50,8 @@ fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node, Direct
                     let new_dir = Direction::from(neighbor - node);
                     if new_dir == dir.inverse()
                         || grid
-                            .get(neighbor)
-                            .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
+                        .get(neighbor)
+                        .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
                     {
                         return None;
                     }
