@@ -32,7 +32,7 @@ where
     heap.push(LowestCostNode::new(start.clone(), num::zero(), num::zero()));
     visited.insert(
         start.clone(),
-        PathNode::new(num::zero(), FxHashSet::default()),
+        PathNode::new(num::zero(), Vec::new()),
     );
     while let Some(LowestCostNode { node, cost, .. }) = heap.pop() {
         if min_cost.is_some_and(|min_cost| min_cost < cost) {
@@ -62,17 +62,14 @@ where
                         path_node.parents.clear();
                     }
                     if new_cost <= path_node.cost {
-                        path_node.parents.insert(node.clone());
+                        path_node.parents.push(node.clone());
                     }
                     if new_cost >= path_node.cost {
                         continue;
                     }
                 }
                 Entry::Vacant(entry) => {
-                    let mut parents = FxHashSet::default();
-                    parents.insert(node.clone());
-                    let path_node = PathNode::new(new_cost, parents);
-                    entry.insert(path_node);
+                    entry.insert(PathNode::new(new_cost, vec![node.clone()]));
                 }
             };
             heap.push(LowestCostNode::new(neighbor.clone(), new_cost, heuristic));
@@ -90,6 +87,21 @@ where
     N: Eq + Hash + Clone + Debug,
     C: Zero + Copy + Ord,
 {
+    pub fn first(&self) -> Vec<N> {
+        let mut sink = if let Some(node) = self.end_nodes.last() {
+            vec![node.clone()]
+        } else {
+            vec![]
+        };
+        while let Some(parent) = sink.last()
+                .and_then(|node| self.visited.get(node))
+                .and_then(move |path_node| path_node.parents.first()) {
+            sink.push(parent.clone());
+        }
+        sink.reverse();
+        sink
+    }
+    
     pub fn collect(&self) -> Vec<Vec<N>> {
         let sink = &mut vec![self.end_nodes.clone()];
         let mut paths = Vec::new();

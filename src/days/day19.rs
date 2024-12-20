@@ -1,13 +1,13 @@
+use regex::Regex;
 use itertools::Itertools;
-use rustc_hash::FxHashSet;
-use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
     let towel_designs = TowelDesigns::from(lines);
+    let regex = Regex::new(&format!("^({})*$", towel_designs.patterns.iter().join("|"))).unwrap();
     towel_designs
         .designs
         .iter()
-        .filter(|design| towel_designs.total_ways(design) > 0)
+        .filter(|design| regex.is_match(design))
         .count() as i64
 }
 
@@ -22,21 +22,17 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 #[derive(Debug)]
 struct TowelDesigns {
-    available: FxHashSet<String>,
+    patterns: Vec<String>,
     designs: Vec<String>,
 }
 
 impl TowelDesigns {
-    // fn can_craft(&self, design: &str) -> i64 {
-    //     
-    // }
-
-    fn total_ways(&self, design: &str) -> i64 {
+    fn total_ways(&self, design: &str ) -> i64 {
         let mut matches = vec![0; design.len() + 1];
         matches[0] = 1;
         for i in 1..=design.len() {
             matches[i] = self
-                .available
+                .patterns
                 .iter()
                 .map(|s| {
                     let len = s.len();
@@ -47,7 +43,7 @@ impl TowelDesigns {
                 })
                 .sum::<i64>();
         }
-        *matches.last().unwrap()
+        matches[matches.len() - 1]
     }
 }
 
@@ -56,9 +52,9 @@ impl From<&[String]> for TowelDesigns {
         let available = value[0]
             .split(", ")
             .map(|s| s.to_owned())
-            .collect::<FxHashSet<_>>();
+            .collect_vec();
         Self {
-            available,
+            patterns: available,
             designs: value[2..]
                 .iter()
                 .filter(|s| !s.is_empty())

@@ -6,13 +6,15 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-structopt = "0.3.26"
+#krampus = { path = "../krampus" }
+
 color-eyre = "0.6.3"
-regex = "1.11.1"
+indexmap = "2.7.0"
 itertools = "0.13.0"
-rustc-hash = "2.1.0"
+num = "0.4.3"
 paste = "1.0.15"
+regex = "1.11.1"
+rustc-hash = "2.1.0"
+structopt = "0.3.26"
 strum = "0.26.3"
 strum_macros = "0.26.4"
-num = "0.4.3"
-indexmap = "2.7.0"

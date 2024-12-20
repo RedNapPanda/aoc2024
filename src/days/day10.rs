@@ -4,7 +4,7 @@ use itertools::Itertools;
 use std::collections::HashSet;
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let grid = &Grid::<usize>::from(lines);
+    let grid = &Grid::usize(lines);
     get_trail_heads(grid)
         .iter()
         .map(|trail_head| solve(grid, trail_head, false))
@@ -12,7 +12,7 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let grid = &Grid::<usize>::from(lines);
+    let grid = &Grid::usize(lines);
     get_trail_heads(grid)
         .iter()
         .map(|trail_head| solve(grid, trail_head, true))

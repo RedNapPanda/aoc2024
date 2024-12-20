@@ -3,6 +3,7 @@ use itertools::Itertools;
 use std::fmt::{Debug, Display, Formatter, Result};
 use std::ops::{Index, IndexMut};
 use std::slice::Iter;
+use crate::utils::direction::Direction;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid<T> {
@@ -34,11 +35,20 @@ impl<T> Grid<T> {
     pub fn iter(&self) -> Iter<'_, Vec<T>> {
         self.rows.iter()
     }
+    
+    pub fn nodes_in_direction(&self, point: &Node, dir: Direction, len: usize) -> Vec<Node> {
+        let vector = &dir.vector();
+        let mut vec = vec![];
+        for i in 0..len as i64 {
+            vec.push(point + (vector * (i + 1)));
+        }
+        vec
+    }
 
     pub fn neighbors_cardinal(&self, point: &Node) -> [Node; 4] {
         [point.left(), point.up(), point.right(), point.down()]
     }
-    
+
     pub fn _neighbors_all(&self, point: &Node) -> [Node; 8] {
         [
             point.left(),
@@ -52,12 +62,27 @@ impl<T> Grid<T> {
         ]
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item = (Node, &T)> + '_ {
+    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Node, &T)> + '_ {
         self.iter().enumerate().flat_map(|(x, row)| {
             row.iter()
                 .enumerate()
                 .map(move |(y, v)| (Node::from((x as i64, y as i64)), v))
         })
+    }
+}
+
+impl Grid<usize> {
+    pub fn usize(vec: &[String]) -> Grid<usize> {
+        Self {
+            rows: vec
+                .iter()
+                .map(|line| {
+                    line.chars()
+                        .flat_map(|c| c.to_digit(10).map(|c| c as usize))
+                        .collect_vec()
+                })
+                .collect_vec(),
+        }
     }
 }
 
@@ -168,25 +193,17 @@ where
     }
 }
 
-impl From<&[String]> for Grid<char> {
-    fn from(vec: &[String]) -> Self {
-        Self {
-            rows: vec
-                .iter()
-                .map(|line| line.chars().collect_vec())
-                .collect_vec(),
-        }
-    }
-}
-
-impl From<&[String]> for Grid<usize> {
+impl<T> From<&[String]> for Grid<T>
+where
+    T: Default + TryFrom<char>,
+{
     fn from(vec: &[String]) -> Self {
         Self {
             rows: vec
                 .iter()
                 .map(|line| {
                     line.chars()
-                        .flat_map(|c| c.to_digit(10).map(|c| c as usize))
+                        .map(|c| T::try_from(c).unwrap_or(T::default()))
                         .collect_vec()
                 })
                 .collect_vec(),

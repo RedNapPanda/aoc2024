@@ -22,7 +22,7 @@ where
     C: Zero + Copy + Ord,
 {
     pub cost: C,
-    pub parents: FxHashSet<N>,
+    pub parents: Vec<N>,
 }
 
 impl<N, C> PathNode<N, C>
@@ -30,7 +30,7 @@ where
     N: Eq + Hash + Clone + Debug,
     C: Zero + Copy + Ord,
 {
-    fn new(cost: C, parents: FxHashSet<N>) -> Self {
+    fn new(cost: C, parents: Vec<N>) -> Self {
         Self { cost, parents }
     }
 }

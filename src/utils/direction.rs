@@ -1,7 +1,8 @@
 use crate::utils::node::Node;
 use std::fmt::{Display, Formatter, Write};
+use strum_macros::EnumIter;
 
-#[derive(Clone, Debug, Hash, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug, EnumIter, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Direction {
     North,
     South,

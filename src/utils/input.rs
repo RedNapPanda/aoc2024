@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
+use itertools::Itertools;
 
 pub fn read_input(day: u8) -> Vec<String> {
     let zero = match day {
@@ -15,6 +16,6 @@ pub fn read_input(day: u8) -> Vec<String> {
 fn read_lines(path: &PathBuf) -> Vec<String> {
     BufReader::new(File::open(path).unwrap())
         .lines()
-        .map(|line| line.unwrap())
-        .collect()
+        .map_while(Result::ok)
+        .collect_vec()
 }

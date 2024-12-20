@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 pub fn solve1(lines: &[String]) -> i64 {
     build_levels(lines)
         .filter(|levels| is_valid_skip(levels.clone(), None))
@@ -5,9 +7,10 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    build_levels(lines)
-        .filter(|levels| {
-            (0..levels.clone().count()).any(|i| is_valid_skip(levels.clone(), Some(i)))
+    let levels = build_levels(lines).collect_vec();
+    levels.iter()
+        .filter(|&level| {
+            (0..levels.len()).any(|i| is_valid_skip(level.clone(), Some(i)))
         })
         .count() as i64
 }
