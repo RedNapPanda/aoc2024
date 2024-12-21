@@ -1,3 +1,4 @@
+use crate::utils::{PathNode, PathResult};
 use itertools::Itertools;
 use num::Zero;
 use rustc_hash::FxHashMap;
@@ -6,7 +7,6 @@ use std::collections::hash_map::Entry;
 use std::collections::BinaryHeap;
 use std::fmt::Debug;
 use std::hash::Hash;
-use crate::utils::{PathNode, PathResult};
 
 pub fn astar<N, IN, FN, C, FC, FH, FE>(
     start: &N,
@@ -18,7 +18,7 @@ pub fn astar<N, IN, FN, C, FC, FH, FE>(
 ) -> Option<PathResult<N, C>>
 where
     N: Eq + Hash + Clone + Debug,
-    IN: IntoIterator<Item = N>,
+    IN: IntoIterator<Item=N>,
     FN: Fn(&N) -> IN,
     C: Zero + Copy + Ord,
     FC: Fn(&N, &N) -> C,
@@ -94,14 +94,14 @@ where
             vec![]
         };
         while let Some(parent) = sink.last()
-                .and_then(|node| self.visited.get(node))
-                .and_then(move |path_node| path_node.parents.first()) {
+            .and_then(|node| self.visited.get(node))
+            .and_then(move |path_node| path_node.parents.first()) {
             sink.push(parent.clone());
         }
         sink.reverse();
         sink
     }
-    
+
     pub fn collect(&self) -> Vec<Vec<N>> {
         let sink = &mut vec![self.end_nodes.clone()];
         let mut paths = Vec::new();
@@ -124,8 +124,8 @@ where
                 Some(nodes) => nodes.last(),
                 _ => return,
             }
-            .and_then(|node| self.visited.get(node))
-            .map(move |path_node| &path_node.parents);
+                .and_then(|node| self.visited.get(node))
+                .map(move |path_node| &path_node.parents);
             if parents.is_none_or(|parents| parents.is_empty()) {
                 return;
             }

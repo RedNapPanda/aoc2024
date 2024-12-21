@@ -1,8 +1,8 @@
-use std::fmt::Debug;
 use indexmap::{IndexMap, IndexSet};
-use rustc_hash::{FxHashMap, FxHasher};
-use std::hash::{BuildHasherDefault, Hash};
 use num::Zero;
+use rustc_hash::{FxHashMap, FxHasher};
+use std::fmt::Debug;
+use std::hash::{BuildHasherDefault, Hash};
 
 pub mod direction;
 pub mod grid;

@@ -70,7 +70,7 @@ enum Xmas {
 }
 
 impl Xmas {
-    fn points_in_direction(&self, pos: &Node) -> (Node, Node, Node) {
+    fn points_in_direction(&self, pos: &Node<i64>) -> (Node<i64>, Node<i64>, Node<i64>) {
         match self {
             Xmas::Right => (pos + (0, 1), pos + (0, 2), pos + (0, 3)),
             Xmas::Left => (pos + (0, -1), pos + (0, -2), pos + (0, -3)),

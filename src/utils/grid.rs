@@ -1,9 +1,9 @@
+use crate::utils::direction::Direction;
 use crate::utils::node::Node;
 use itertools::Itertools;
 use std::fmt::{Debug, Display, Formatter, Result};
 use std::ops::{Index, IndexMut};
 use std::slice::Iter;
-use crate::utils::direction::Direction;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid<T> {
@@ -11,14 +11,14 @@ pub struct Grid<T> {
 }
 
 impl<T> Grid<T> {
-    pub fn get(&self, point: &Node) -> Option<&T> {
+    pub fn get(&self, point: &Node<i64>) -> Option<&T> {
         match self.contains(point) {
             true => Some(&self.rows[point.x as usize][point.y as usize]),
             false => None,
         }
     }
 
-    pub fn set(&mut self, point: &Node, value: T) {
+    pub fn set(&mut self, point: &Node<i64>, value: T) {
         if self.contains(point) {
             self.rows[point.x as usize][point.y as usize] = value;
         }
@@ -36,7 +36,7 @@ impl<T> Grid<T> {
         self.rows.iter()
     }
 
-    pub fn _nodes_in_direction(&self, point: &Node, dir: Direction, len: usize) -> Vec<Node> {
+    pub fn _nodes_in_direction(&self, point: &Node<i64>, dir: Direction, len: usize) -> Vec<Node<i64>> {
         let vector = &dir.vector();
         let mut vec = vec![];
         for i in 0..len as i64 {
@@ -45,11 +45,11 @@ impl<T> Grid<T> {
         vec
     }
 
-    pub fn neighbors_cardinal(&self, point: &Node) -> [Node; 4] {
+    pub fn neighbors_cardinal(&self, point: &Node<i64>) -> [Node<i64>; 4] {
         [point.left(), point.up(), point.right(), point.down()]
     }
 
-    pub fn _neighbors_all(&self, point: &Node) -> [Node; 8] {
+    pub fn _neighbors_all(&self, point: &Node<i64>) -> [Node<i64>; 8] {
         [
             point.left(),
             point.left_up(),
@@ -62,7 +62,7 @@ impl<T> Grid<T> {
         ]
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Node, &T)> + '_ {
+    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Node<i64>, &T)> + '_ {
         self.iter().enumerate().flat_map(|(x, row)| {
             row.iter()
                 .enumerate()
@@ -161,8 +161,8 @@ pub trait Contains<T> {
     fn contains(&self, other: T) -> bool;
 }
 
-impl<T> Contains<&Node> for Grid<T> {
-    fn contains(&self, other: &Node) -> bool {
+impl<T> Contains<&Node<i64>> for Grid<T> {
+    fn contains(&self, other: &Node<i64>) -> bool {
         other.x >= 0
             && other.x < self.height() as i64
             && other.y >= 0

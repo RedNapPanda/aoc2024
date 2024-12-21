@@ -19,7 +19,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .sum()
 }
 
-fn solve(grid: &Grid<usize>, trail_head: &Node, part2: bool) -> i64 {
+fn solve(grid: &Grid<usize>, trail_head: &Node<i64>, part2: bool) -> i64 {
     let mut count = 0;
     let mut seen = HashSet::new();
     let mut stack = Vec::new();
@@ -38,7 +38,7 @@ fn solve(grid: &Grid<usize>, trail_head: &Node, part2: bool) -> i64 {
     count
 }
 
-fn get_trail_heads(grid: &Grid<usize>) -> Vec<Node> {
+fn get_trail_heads(grid: &Grid<usize>) -> Vec<Node<i64>> {
     grid.iter_enumerate()
         .filter_map(|(p, x)| match x {
             0 => Some(p),
@@ -47,7 +47,7 @@ fn get_trail_heads(grid: &Grid<usize>) -> Vec<Node> {
         .collect_vec()
 }
 
-fn walk(grid: &Grid<usize>, stack: &mut Vec<Node>, pos: Node, cur: usize) {
+fn walk(grid: &Grid<usize>, stack: &mut Vec<Node<i64>>, pos: Node<i64>, cur: usize) {
     for p in [pos.left(), pos.right(), pos.up(), pos.down()] {
         if let Some(&next) = grid.get(&p) {
             if next > cur && next - cur == 1 {

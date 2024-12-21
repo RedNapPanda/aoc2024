@@ -64,7 +64,7 @@ impl Display for Direction {
 }
 
 impl Direction {
-    fn vector(&self) -> Node {
+    fn vector(&self) -> Node<i64> {
         match self {
             Direction::Left => Node { x: 0, y: -1 },
             Direction::Right => Node { x: 0, y: 1 },
@@ -98,7 +98,7 @@ fn walk_robot(
 }
 
 fn find_robot(
-    grid: &Grid<char>) -> Node {
+    grid: &Grid<char>) -> Node<i64> {
     grid.iter_enumerate()
         .find_map(|(point, char)| match char {
             '@' => Some(point),
@@ -108,7 +108,7 @@ fn find_robot(
 }
 
 fn shift_boxes(
-    grid: &mut Grid<char>, robot: &mut Node, movement: &Direction) {
+    grid: &mut Grid<char>, robot: &mut Node<i64>, movement: &Direction) {
     let (can_push, stack_opt) = boxes_to_move(grid, movement, robot);
     if !can_push {
         return;
@@ -132,12 +132,13 @@ fn shift_boxes(
     }
 }
 
+type StackResult = Option<HashSet<(Node<i64>, Node<i64>)>>;
 fn boxes_to_move(
     grid: &mut Grid<char>,
     direction: &Direction,
-    pos: &Node,
-) -> (bool, Option<HashSet<(Node, Node)>>) {
-    const INVALID: (bool, Option<HashSet<(Node, Node)>>) = (false, None);
+    pos: &Node<i64>,
+) -> (bool, StackResult) {
+    const INVALID: (bool, StackResult) = (false, None);
     if grid.get(pos).is_none_or(|&c| c == '#') {
         return INVALID;
     }

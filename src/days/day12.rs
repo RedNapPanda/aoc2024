@@ -50,7 +50,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .sum()
 }
 
-fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Node>)> {
+fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Node<i64>>)> {
     let seen = &mut HashSet::new();
     let mut plots = Vec::new();
     for (pos, &plant) in grid.iter_enumerate() {
@@ -68,7 +68,7 @@ fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Node>)> {
     plots
 }
 
-fn dfs(grid: &Grid<char>, plant: char, pos: Node, area: &mut HashSet<Node>) -> i64 {
+fn dfs(grid: &Grid<char>, plant: char, pos: Node<i64>, area: &mut HashSet<Node<i64>>) -> i64 {
     match grid.get(&pos) {
         Some(&plot) if plot == plant => {
             area.insert(pos.clone());

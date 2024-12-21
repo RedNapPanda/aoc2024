@@ -33,14 +33,14 @@ fn parse(lines: &[String]) -> Grid<Tile> {
     }
 }
 
-fn start(grid: &Grid<Tile>) -> Node {
+fn start(grid: &Grid<Tile>) -> Node<i64> {
     grid.iter_enumerate()
         .find(|&(_, tile)| *tile == Tile::Reindeer)
         .map(|(p, _)| p)
         .unwrap()
 }
 
-fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node, Direction), i64>> {
+fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node<i64>, Direction), i64>> {
     astar(
         &(start(grid), Direction::East),
         |(node, dir)| {

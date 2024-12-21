@@ -33,7 +33,7 @@ impl Direction {
         self.turn_left().inverse()
     }
 
-    pub fn vector(&self) -> Node {
+    pub fn vector(&self) -> Node<i64> {
         match self {
             Direction::North => Node { x: -1, y: 0 },
             Direction::South => Node { x: 1, y: 0 },
@@ -61,8 +61,8 @@ impl Display for Direction {
     }
 }
 
-impl From<Node> for Direction {
-    fn from(value: Node) -> Self {
+impl From<Node<i64>> for Direction {
+    fn from(value: Node<i64>) -> Self {
         match value {
             Node { x: 0, y: 0 } => panic!("Not a vector"),
             Node { x, y: 0 } if x < 0 => Direction::North,

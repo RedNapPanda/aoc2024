@@ -85,8 +85,8 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 #[derive(Clone, Debug)]
 struct Robot {
-    position: Node,
-    velocity: Node,
+    position: Node<i64>,
+    velocity: Node<i64>,
 }
 
 impl Robot {

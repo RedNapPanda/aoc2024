@@ -1,7 +1,7 @@
+use itertools::Itertools;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
-use itertools::Itertools;
 
 pub fn read_input(day: u8) -> Vec<String> {
     let zero = match day {

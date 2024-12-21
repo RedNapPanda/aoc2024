@@ -38,7 +38,7 @@ fn solve(lines: &[String], max_steps: i64) -> i64 {
     count
 }
 
-fn diamond_search(grid: &Grid<Tile>, result: &PathResult<Node, i64>, start: &Node, cost: i64, max_steps: i64, min_saved: i64) -> i64 {
+fn diamond_search(grid: &Grid<Tile>, result: &PathResult<Node<i64>, i64>, start: &Node<i64>, cost: i64, max_steps: i64, min_saved: i64) -> i64 {
     let mut count = 0;
     (-max_steps..=max_steps).for_each(|x| {
         let dist_left = max_steps - x.abs();
@@ -62,7 +62,7 @@ fn diamond_search(grid: &Grid<Tile>, result: &PathResult<Node, i64>, start: &Nod
     count
 }
 
-fn start(grid: &Grid<Tile>) -> Node {
+fn start(grid: &Grid<Tile>) -> Node<i64> {
     grid.iter_enumerate()
         .find(|&(_, tile)| *tile == Tile::Start)
         .map(|(p, _)| p)

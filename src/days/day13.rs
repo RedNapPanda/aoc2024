@@ -25,9 +25,9 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 #[derive(Debug, Clone)]
 struct ClawMachine {
-    a_button: Node,
-    b_button: Node,
-    prize: Node,
+    a_button: Node<i64>,
+    b_button: Node<i64>,
+    prize: Node<i64>,
 }
 
 impl ClawMachine {

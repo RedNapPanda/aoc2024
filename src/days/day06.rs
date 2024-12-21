@@ -34,7 +34,7 @@ pub fn solve2(lines: &[String]) -> i64 {
         .count() as i64
 }
 
-fn with_start(lines: &[String]) -> (Grid<char>, Node) {
+fn with_start(lines: &[String]) -> (Grid<char>, Node<i64>) {
     let grid = Grid::from(lines);
     let start = grid
         .iter_enumerate()
@@ -44,7 +44,8 @@ fn with_start(lines: &[String]) -> (Grid<char>, Node) {
     (grid, start)
 }
 
-fn walk(grid: &Grid<char>, pos: Node) -> (HashSet<(Node, Node)>, bool) {
+type SeenNodes = HashSet<(Node<i64>, Node<i64>)>;
+fn walk(grid: &Grid<char>, pos: Node<i64>) -> (SeenNodes, bool) {
     let dir = Node::from((-1, 0));
     let mut seen = HashSet::new();
     let mut node = (pos.clone(), dir.clone());

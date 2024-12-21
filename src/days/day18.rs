@@ -52,7 +52,7 @@ fn set_walls(grid: &mut Grid<char>, lines: &[String], range: Range<usize>) {
     }
 }
 
-fn scan(grid: &Grid<char>, size: usize) -> Option<PathResult<Node, i32>> {
+fn scan(grid: &Grid<char>, size: usize) -> Option<PathResult<Node<i64>, i32>> {
     astar(
         &Node::new(0, 0),
         |node| {

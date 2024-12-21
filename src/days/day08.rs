@@ -30,7 +30,7 @@ fn count_nodes(lines: &[String], part2: bool) -> i64 {
                     let mut a_node = &a - &step;
                     while grid.contains(&a_node) {
                         vec.push(a_node.clone());
-                        a_node = a_node - &step;
+                        a_node = &a_node - &step;
                         if !part2 {
                             break;
                         }
@@ -38,7 +38,7 @@ fn count_nodes(lines: &[String], part2: bool) -> i64 {
                     let mut b_node = &b + &step;
                     while grid.contains(&b_node) {
                         vec.push(b_node.clone());
-                        b_node = b_node + &step;
+                        b_node = &b_node + &step;
                         if !part2 {
                             break;
                         }
