@@ -107,6 +107,21 @@ where
 
 impl<T> Grid<T>
 where
+    T: PartialEq, {
+    pub fn find(&self, val: T) -> Option<Node<i64>> {
+        for x in 0..self.height() {
+            for y in 0..self.width() {
+                if self[x][y] == val {
+                    return Some(Node::new(x as i64, y as i64));
+                }
+            }
+        }
+        None
+    }
+}
+
+impl<T> Grid<T>
+where
     T: Default + Clone,
 {
     pub fn with_dimensions(height: usize, width: usize) -> Self {

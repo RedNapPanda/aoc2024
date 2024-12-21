@@ -24,25 +24,18 @@ pub fn solve2(lines: &[String]) -> i64 {
     }) as i64
 }
 
-fn parse(lines: &[String]) -> Grid<Tile> {
+fn parse(lines: &[String]) -> Grid<D16Tile> {
     Grid {
         rows: lines
             .iter()
-            .map(|line| line.chars().flat_map(Tile::try_from).collect_vec())
+            .map(|line| line.chars().flat_map(D16Tile::try_from).collect_vec())
             .collect_vec(),
     }
 }
 
-fn start(grid: &Grid<Tile>) -> Node<i64> {
-    grid.iter_enumerate()
-        .find(|&(_, tile)| *tile == Tile::Reindeer)
-        .map(|(p, _)| p)
-        .unwrap()
-}
-
-fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node<i64>, Direction), i64>> {
+fn find_paths(grid: &Grid<D16Tile>, part2: bool) -> Option<PathResult<(Node<i64>, Direction), i64>> {
     astar(
-        &(start(grid), Direction::East),
+        &(grid.find(D16Tile::Reindeer).unwrap(), Direction::East),
         |(node, dir)| {
             grid.neighbors_cardinal(node)
                 .iter()
@@ -51,7 +44,7 @@ fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node<i64>, D
                     if new_dir == dir.inverse()
                         || grid
                         .get(neighbor)
-                        .is_some_and(|tile| tile != &Tile::Empty && tile != &Tile::End)
+                        .is_some_and(|tile| tile != &D16Tile::Empty && tile != &D16Tile::End)
                     {
                         return None;
                     }
@@ -61,44 +54,44 @@ fn find_paths(grid: &Grid<Tile>, part2: bool) -> Option<PathResult<(Node<i64>, D
         },
         |prev, cur| 1 + (1000 * (cur.1 != prev.1) as i64),
         |_, _| 0,
-        |(node, _)| grid.get(node).is_some_and(|tile| tile == &Tile::End),
+        |(node, _)| grid.get(node).is_some_and(|tile| tile == &D16Tile::End),
         part2,
     )
 }
 
 #[derive(Debug, PartialEq, Clone)]
-enum Tile {
+enum D16Tile {
     Reindeer,
     End,
     Empty,
     Wall,
 }
 
-impl Display for Tile {
+impl Display for D16Tile {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_char(self.into())
     }
 }
 
-impl From<&Tile> for char {
-    fn from(tile: &Tile) -> char {
+impl From<&D16Tile> for char {
+    fn from(tile: &D16Tile) -> char {
         match tile {
-            Tile::Reindeer => 'S',
-            Tile::End => 'E',
-            Tile::Empty => '.',
-            Tile::Wall => '#',
+            D16Tile::Reindeer => 'S',
+            D16Tile::End => 'E',
+            D16Tile::Empty => '.',
+            D16Tile::Wall => '#',
         }
     }
 }
 
-impl TryFrom<char> for Tile {
+impl TryFrom<char> for D16Tile {
     type Error = ();
     fn try_from(c: char) -> Result<Self, Self::Error> {
         match c {
-            'S' => Ok(Tile::Reindeer),
-            'E' => Ok(Tile::End),
-            '.' => Ok(Tile::Empty),
-            '#' => Ok(Tile::Wall),
+            'S' => Ok(D16Tile::Reindeer),
+            'E' => Ok(D16Tile::End),
+            '.' => Ok(D16Tile::Empty),
+            '#' => Ok(D16Tile::Wall),
             _ => Err(()),
         }
     }

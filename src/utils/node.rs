@@ -28,8 +28,11 @@ impl<T> Node<T>
 where
     T: Num + Copy + Debug + Neg<Output=T> + Sub<Output=T> + Add<Output=T>,
 {
-    pub fn new(x: T, y: T) -> Self {
-        Self { x, y }
+    pub fn new<TT: Into<T>>(x: TT, y: TT) -> Self {
+        Self { 
+            x: x.into(), 
+            y: y.into() 
+        }
     }
 
     pub fn left(&self) -> Self {
