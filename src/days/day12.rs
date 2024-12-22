@@ -53,7 +53,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 fn plots(grid: &Grid<char>) -> Vec<(i64, Vec<Node<i64>>)> {
     let seen = &mut HashSet::new();
     let mut plots = Vec::new();
-    for (pos, &plant) in grid.iter_enumerate() {
+    for (pos, &plant) in grid.enumerate() {
         if seen.contains(&pos) {
             continue;
         }

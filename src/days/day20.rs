@@ -91,12 +91,13 @@ impl From<&D20Tile> for char {
 impl TryFrom<char> for D20Tile {
     type Error = ();
     fn try_from(c: char) -> Result<Self, Self::Error> {
-        match c {
-            'S' => Ok(D20Tile::Start),
-            'E' => Ok(D20Tile::End),
-            '.' => Ok(D20Tile::Empty),
-            '#' => Ok(D20Tile::Wall),
-            _ => Err(()),
-        }
+        let tile = match c {
+            'S' => D20Tile::Start,
+            'E' => D20Tile::End,
+            '.' => D20Tile::Empty,
+            '#' => D20Tile::Wall,
+            _ => return Err(()),
+        };
+        Ok(tile)
     }
 }

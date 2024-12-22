@@ -6,7 +6,7 @@ use strum_macros::EnumIter;
 
 pub fn solve1(lines: &[String]) -> i64 {
     let grid = &Grid::<char>::from(lines);
-    grid.iter_enumerate()
+    grid.enumerate()
         .filter_map(|(pos, &x)| {
             if x != 'X' {
                 return None;
@@ -27,7 +27,7 @@ pub fn solve1(lines: &[String]) -> i64 {
 
 pub fn solve2(lines: &[String]) -> i64 {
     let grid = &Grid::<char>::from(lines);
-    grid.iter_enumerate()
+    grid.enumerate()
         .filter(|(pos, &x)| {
             let left_down = pos.left_down();
             let left_up = pos.left_up();

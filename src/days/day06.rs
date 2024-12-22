@@ -37,7 +37,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 fn with_start(lines: &[String]) -> (Grid<char>, Node<i64>) {
     let grid = Grid::from(lines);
     let start = grid
-        .iter_enumerate()
+        .enumerate()
         .find(|(_, &c)| c == '^')
         .map(|(p, _)| p)
         .unwrap();

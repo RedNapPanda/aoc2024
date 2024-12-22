@@ -62,12 +62,28 @@ impl<T> Grid<T> {
         ]
     }
 
-    pub fn iter_enumerate(&self) -> impl Iterator<Item=(Node<i64>, &T)> + '_ {
-        self.iter().enumerate().flat_map(|(x, row)| {
-            row.iter()
-                .enumerate()
-                .map(move |(y, v)| (Node::from((x as i64, y as i64)), v))
-        })
+    pub fn lookup_table(&self) -> impl Iterator<Item=(&T, Node<i64>)> + '_ {
+        self.iter()
+            .enumerate()
+            .flat_map(|(x, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(move |(y, v)| (v, Node::from((x as i64, y as i64))))
+            })
+    }
+
+    pub fn enumerate(&self) -> impl Iterator<Item=(Node<i64>, &T)> + '_ {
+        self.iter()
+            .enumerate()
+            .flat_map(|(x, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(move |(y, v)| (Node::from((x as i64, y as i64)), v))
+            })
+    }
+
+    pub fn _manhattan_distance(&self, start: &Node<i64>, end: &Node<i64>) -> i64 {
+        (start.x - end.x).abs() + (start.y - end.y).abs()
     }
 }
 
@@ -107,7 +123,8 @@ where
 
 impl<T> Grid<T>
 where
-    T: PartialEq, {
+    T: PartialEq,
+{
     pub fn find(&self, val: T) -> Option<Node<i64>> {
         for x in 0..self.height() {
             for y in 0..self.width() {
@@ -221,6 +238,20 @@ where
                         .map(|c| T::try_from(c).unwrap_or(T::default()))
                         .collect_vec()
                 })
+                .collect_vec(),
+        }
+    }
+}
+
+impl<T, const N: usize, const M: usize> From<&[[T; M]; N]> for Grid<T>
+where
+    T: Clone + TryFrom<char>,
+{
+    fn from(val: &[[T; M]; N]) -> Self {
+        Self {
+            rows: val
+                .iter()
+                .map(|slice| slice.to_vec())
                 .collect_vec(),
         }
     }

@@ -91,7 +91,7 @@ fn walk_robot(
     for movement in movements {
         shift_boxes(grid, &mut robot, movement);
     }
-    grid.iter_enumerate()
+    grid.enumerate()
         .filter_map(|(point, &c)| if c == box_char { Some(point) } else { None })
         .map(|pos| pos.x * 100 + pos.y)
         .sum()
@@ -99,7 +99,7 @@ fn walk_robot(
 
 fn find_robot(
     grid: &Grid<char>) -> Node<i64> {
-    grid.iter_enumerate()
+    grid.enumerate()
         .find_map(|(point, char)| match char {
             '@' => Some(point),
             _ => None,

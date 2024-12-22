@@ -11,7 +11,7 @@ pub fn solve2(lines: &[String]) -> i64 {
 
 fn count_nodes(lines: &[String], part2: bool) -> i64 {
     let grid = &Grid::<char>::from(lines);
-    grid.iter_enumerate()
+    grid.enumerate()
         .filter(|(_, &c)| c != '.')
         // sort keys as chunk_by doesn't work when keys are not next to each other
         // wasted a ton of time here, example doesn't have different antenna non-sequentially

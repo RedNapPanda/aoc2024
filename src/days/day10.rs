@@ -39,7 +39,7 @@ fn solve(grid: &Grid<usize>, trail_head: &Node<i64>, part2: bool) -> i64 {
 }
 
 fn get_trail_heads(grid: &Grid<usize>) -> Vec<Node<i64>> {
-    grid.iter_enumerate()
+    grid.enumerate()
         .filter_map(|(p, x)| match x {
             0 => Some(p),
             _ => None,
