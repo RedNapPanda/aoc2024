@@ -30,14 +30,14 @@ pub fn solve2(lines: &[String]) -> i64 {
 #[derive(Debug)]
 struct Program {
     index: usize,
-    reg_a: u128,
-    reg_b: u128,
-    reg_c: u128,
-    program: Vec<u128>,
+    reg_a: usize,
+    reg_b: usize,
+    reg_c: usize,
+    program: Vec<usize>,
 }
 
 impl Program {
-    fn run(&mut self) -> Option<u128> {
+    fn run(&mut self) -> Option<usize> {
         let mut result = None;
         while self.index < self.program.len() {
             let opcode_value = self.program[self.index];
@@ -50,12 +50,12 @@ impl Program {
                 7.. => 0,
             };
             match Opcode::from(opcode_value) {
-                Opcode::Adv => self.reg_a /= 2u128.pow(combo as u32),
+                Opcode::Adv => self.reg_a /= 2usize.pow(combo as u32),
                 Opcode::Bxl => self.reg_b ^= operand,
                 Opcode::Bst => self.reg_b = combo % 8,
                 Opcode::Bxc => self.reg_b ^= self.reg_c,
-                Opcode::Bdv => self.reg_b = self.reg_a / 2u128.pow(combo as u32),
-                Opcode::Cdv => self.reg_c = self.reg_a / 2u128.pow(combo as u32),
+                Opcode::Bdv => self.reg_b = self.reg_a / 2usize.pow(combo as u32),
+                Opcode::Cdv => self.reg_c = self.reg_a / 2usize.pow(combo as u32),
                 Opcode::Jnz => {
                     if self.reg_a != 0 {
                         self.index = operand as usize;
@@ -69,7 +69,7 @@ impl Program {
         result
     }
 
-    fn self_replication(&mut self, index: u128, next: u128) -> Option<u128> {
+    fn self_replication(&mut self, index: usize, next: usize) -> Option<usize> {
         let prev_a = next * 8;
         for i in 0..8 {
             let possible_a = prev_a + i;
@@ -100,12 +100,12 @@ impl From<&[String]> for Program {
     fn from(lines: &[String]) -> Self {
         Program {
             index: 0,
-            reg_a: lines[0][12..].parse::<u128>().unwrap(),
-            reg_b: lines[1][12..].parse::<u128>().unwrap(),
-            reg_c: lines[2][12..].parse::<u128>().unwrap(),
+            reg_a: lines[0][12..].parse::<usize>().unwrap(),
+            reg_b: lines[1][12..].parse::<usize>().unwrap(),
+            reg_c: lines[2][12..].parse::<usize>().unwrap(),
             program: lines[4][9..]
                 .split(",")
-                .map(|s| s.parse::<u128>().unwrap())
+                .map(|s| s.parse::<usize>().unwrap())
                 .collect_vec(),
         }
     }
@@ -135,8 +135,8 @@ enum Opcode {
     Cdv,
 }
 
-impl From<u128> for Opcode {
-    fn from(value: u128) -> Self {
+impl From<usize> for Opcode {
+    fn from(value: usize) -> Self {
         match value {
             0 => Opcode::Adv,
             1 => Opcode::Bxl,
