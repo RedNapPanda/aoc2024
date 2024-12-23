@@ -3,8 +3,6 @@ use crate::utils::node::Node;
 use itertools::Itertools;
 use rustc_hash::FxHashMap;
 use std::collections::VecDeque;
-use std::fmt::Display;
-use strum::IntoEnumIterator;
 
 type PathMap = FxHashMap<(char, char), String>;
 
