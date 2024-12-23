@@ -21,7 +21,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     let mut sequences = FxHashMap::default();
     for line in lines {
         let mut secret = line.parse::<i64>().unwrap();
-        let mut prices = vec![(secret % 10, 0); 2001];
+        let mut prices = vec![(secret % 10, 0); ITERATIONS+1];
         for i in 0..ITERATIONS {
             secret = next_secret(secret);
             let price = secret % 10;
