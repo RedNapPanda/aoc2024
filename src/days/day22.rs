@@ -8,9 +8,7 @@ pub fn solve1(lines: &[String]) -> i64 {
     lines.iter()
         .map(|line| {
             (0..ITERATIONS)
-                .fold(line.parse::<i64>().unwrap(),
-                      |secret, _| next_secret(secret),
-                )
+                .fold(line.parse::<i64>().unwrap(), |secret, _| next_secret(secret))
         })
         .sum::<i64>()
 }
