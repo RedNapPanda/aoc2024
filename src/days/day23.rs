@@ -1,17 +1,9 @@
-use std::collections::BTreeSet;
 use itertools::Itertools;
 use rustc_hash::{FxHashMap, FxHashSet};
+use std::collections::BTreeSet;
 
 pub fn solve1(lines: &[String]) -> i64 {
-    let mut connections = FxHashMap::<String, FxHashSet<String>>::default();
-    lines.iter()
-        .flat_map(|line|
-            line.split_once('-')
-                .map(|(s1, s2)| (s1.to_string(), s2.to_string())))
-        .for_each(|(a, b)| {
-            connections.entry(a.clone()).or_insert_with(FxHashSet::default).insert(b.clone());
-            connections.entry(b).or_insert_with(FxHashSet::default).insert(a);
-        });
+    let connections = build_connections(lines);
     let mut seen = FxHashSet::default();
     let mut count = 0;
     for (comp1, comp_connections) in &connections {
@@ -32,17 +24,9 @@ pub fn solve1(lines: &[String]) -> i64 {
 }
 
 pub fn solve2(lines: &[String]) -> i64 {
-    let mut connections = FxHashMap::<String, BTreeSet<String>>::default();
-    lines.iter()
-        .flat_map(|line|
-            line.split_once('-')
-                .map(|(s1, s2)| (s1.to_string(), s2.to_string())))
-        .for_each(|(a, b)| {
-            connections.entry(a.clone()).or_insert_with(BTreeSet::default).insert(b.clone());
-            connections.entry(b).or_insert_with(BTreeSet::default).insert(a);
-        });
+    let connections = build_connections(lines);
     let mut seen = BTreeSet::default();
-    let mut largest = vec![];
+    let mut largest = BTreeSet::new();
     for c in connections.keys() {
         if seen.contains(c) {
             continue;
@@ -52,33 +36,41 @@ pub fn solve2(lines: &[String]) -> i64 {
         set.insert(c.clone());
         let result = bron_kerbosch(&connections, set);
         if result.len() > largest.len() {
-            largest = result.iter().cloned().sorted().collect_vec();
+            largest = result.clone();
         }
         seen.extend(result);
     }
-
     println!("Solution: {}", largest.iter().sorted().join(","));
     0
 }
 
-fn bron_kerbosch(connections: &FxHashMap<String, BTreeSet<String>>, p: BTreeSet<String>) -> BTreeSet<String> {
-    let mut stack = vec![(BTreeSet::default(), p, BTreeSet::default())];
-    while let Some((r, p, x)) = stack.pop() {
-        if p.is_empty() && x.is_empty() {
-            return r;
+fn build_connections(lines: &[String]) -> FxHashMap<String, BTreeSet<String>> {
+    let mut connections = FxHashMap::<String, BTreeSet<String>>::default();
+    lines.iter()
+        .flat_map(|line|
+            line.split_once('-')
+                .map(|(s1, s2)| (s1.to_string(), s2.to_string())))
+        .for_each(|(a, b)| {
+            connections.entry(a.clone()).or_insert_with(BTreeSet::default).insert(b.clone());
+            connections.entry(b).or_insert_with(BTreeSet::default).insert(a);
+        });
+    connections
+}
+
+fn bron_kerbosch(connections: &FxHashMap<String, BTreeSet<String>>, remaining: BTreeSet<String>) -> BTreeSet<String> {
+    let mut stack = vec![(BTreeSet::default(), remaining, BTreeSet::default())];
+    while let Some((mut result, mut remaining, mut seen)) = stack.pop() {
+        if remaining.is_empty() && seen.is_empty() {
+            return result;
         }
-        for c in &p {
-            let mut p_minus_c = p.clone();
-            p_minus_c.remove(c);
-            let mut x_union_c = x.clone();
-            x_union_c.insert(c.clone());
-            let mut r_union_c = r.clone();
-            r_union_c.insert(c.to_owned());
-            let n = connections.get(c).unwrap();
-            let p_intersection_n = p.intersection(n).cloned().collect::<BTreeSet<_>>();
-            let x_intersection_n = x.intersection(n).cloned().collect::<BTreeSet<_>>();
-            stack.push((r.clone(), p_minus_c, x_union_c));
-            stack.push((r_union_c, p_intersection_n, x_intersection_n));
+        if let Some(c) = remaining.pop_first() {
+            let n = connections.get(&c).unwrap();
+            let p_intersection_n = remaining.intersection(n).cloned().collect::<BTreeSet<_>>();
+            let x_intersection_n = seen.intersection(n).cloned().collect::<BTreeSet<_>>();
+            seen.insert(c.clone());
+            result.insert(c.clone());
+            stack.push((result.clone(), remaining, seen));
+            stack.push((result, p_intersection_n, x_intersection_n));
         }
     }
     BTreeSet::default()
