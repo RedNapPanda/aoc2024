@@ -7,6 +7,7 @@ use std::slice::Iter;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid<T> {
+    // TODO: make this a 1D array
     pub rows: Vec<Vec<T>>,
 }
 
@@ -118,6 +119,13 @@ where
                 self.rows[i][j] = default.clone()
             }
         }
+    }
+
+    pub fn transpose(&mut self) -> &Self {
+        self.rows = (0..self.width())
+            .map(|y| self.rows.iter().map(|row| row[y].clone()).collect_vec())
+            .collect_vec();
+        self
     }
 }
 
