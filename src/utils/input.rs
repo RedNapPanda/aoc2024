@@ -4,12 +4,7 @@ use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 
 pub fn read_input(day: u8) -> Vec<String> {
-    let zero = match day {
-        ..10 => "0",
-        _ => "",
-    };
-
-    let path = Path::new("day_data").join(format!("day{}{}", zero, day));
+    let path = Path::new("day_data").join(format!("day{:02}", day));
     read_lines(&path)
 }
 
