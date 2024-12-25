@@ -67,10 +67,6 @@ fn run_adder<'a>(inputs: &'a FxHashMap<String, usize>, gates: &'a FxHashMap<Stri
     let mut resolved = inputs.clone();
     let mut queue = gates.clone().into_iter().collect::<VecDeque<_>>();
     while let Some((c, (a, op, b))) = queue.pop_front() {
-        if a == b || b == c || a == c {
-            println!("{} {} {} | {}", a, op, b, c);
-            break;
-        }
         if !resolved.contains_key(&a) || !resolved.contains_key(&b) {
             queue.push_back((c, (a, op, b)));
             continue;
