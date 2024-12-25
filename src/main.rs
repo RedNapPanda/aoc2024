@@ -20,19 +20,25 @@ struct Opt {
 fn main() -> Result<()> {
     color_eyre::install()?;
     let opt = Opt::from_args();
-    let lines = input::read_input(opt.day);
+    let range = if opt.day == 0 {
+        1..=25
+    } else {
+        opt.day..=opt.day
+    };
+    for day in range {
+        let lines = input::read_input(day);
+        let func1 = day_fn(day, true);
+        let time1 = Instant::now();
+        let result1 = func1(&lines);
+        let elapsed1 = time1.elapsed();
+        println!("Day {} | P1: {:?} in {:?}", day, result1, elapsed1);
 
-    let func1 = day_fn(opt.day, true);
-    let time1 = Instant::now();
-    let result1 = func1(&lines);
-    let elapsed1 = time1.elapsed();
-    println!("P1: {:?} in {:?}", result1, elapsed1);
-
-    let func2 = day_fn(opt.day, false);
-    let time2 = Instant::now();
-    let result2 = func2(&lines);
-    let elapsed2 = time2.elapsed();
-    println!("P2: {:?} in {:?}", result2, elapsed2);
+        let func2 = day_fn(day, false);
+        let time2 = Instant::now();
+        let result2 = func2(&lines);
+        let elapsed2 = time2.elapsed();
+        println!("Day {} | P2: {:?} in {:?}", day, result2, elapsed2);
+    }
 
     Ok(())
 }

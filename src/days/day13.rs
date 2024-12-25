@@ -37,15 +37,15 @@ impl ClawMachine {
     |ay by||b_count| = |y|
     */
     fn cramers_rule(&self, shift: i64) -> i64 {
-        let px = self.prize.x + shift;
-        let py = self.prize.y + shift;
+        let px = self.prize.y + shift;
+        let py = self.prize.x + shift;
         let a = &self.a_button;
         let b = &self.b_button;
-        let det = a.x * b.y - a.y * b.x; // determinant of matrix
-        let a_count = (px * b.y - py * b.x) / det;
-        let b_count = (py * a.x - px * a.y) / det;
-        let x = a.x * a_count + b.x * b_count;
-        let y = a.y * a_count + b.y * b_count;
+        let det = a.y * b.x - a.x * b.y; // determinant of matrix
+        let a_count = (px * b.x - py * b.y) / det;
+        let b_count = (py * a.y - px * a.x) / det;
+        let x = a.y * a_count + b.y * b_count;
+        let y = a.x * a_count + b.x * b_count;
         if px != x || py != y {
             return 0;
         }
@@ -56,12 +56,12 @@ impl ClawMachine {
         if !seen.insert((a_count, b_count)) {
             return None;
         }
-        let px = self.a_button.x * a_count + self.b_button.x * b_count;
-        let py = self.a_button.y * a_count + self.b_button.y * b_count;
-        if px == self.prize.x && py == self.prize.y {
+        let px = self.a_button.y * a_count + self.b_button.y * b_count;
+        let py = self.a_button.x * a_count + self.b_button.x * b_count;
+        if px == self.prize.y && py == self.prize.x {
             return Some(a_count * 3 + b_count);
         }
-        if a_count > 100 || b_count > 100 || px > self.prize.x || py > self.prize.y {
+        if a_count > 100 || b_count > 100 || px > self.prize.y || py > self.prize.x {
             return None;
         }
         let a_tokens = self._dfs(a_count + 1, b_count, seen);

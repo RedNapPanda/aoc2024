@@ -37,26 +37,26 @@ where
 
     pub fn left(&self) -> Self {
         Self {
-            x: self.x,
-            y: self.y - num::one(),
+            x: self.x - num::one(),
+            y: self.y,
         }
     }
     pub fn right(&self) -> Self {
-        Self {
-            x: self.x,
-            y: self.y + num::one(),
-        }
-    }
-    pub fn down(&self) -> Self {
         Self {
             x: self.x + num::one(),
             y: self.y,
         }
     }
+    pub fn down(&self) -> Self {
+        Self {
+            x: self.x,
+            y: self.y + num::one(),
+        }
+    }
     pub fn up(&self) -> Self {
         Self {
-            x: self.x - num::one(),
-            y: self.y,
+            x: self.x,
+            y: self.y - num::one(),
         }
     }
 
@@ -68,14 +68,14 @@ where
     }
     pub fn right_up(&self) -> Self {
         Self {
-            x: self.x - num::one(),
-            y: self.y + num::one(),
+            x: self.x + num::one(),
+            y: self.y - num::one(),
         }
     }
     pub fn left_down(&self) -> Self {
         Self {
-            x: self.x + num::one(),
-            y: self.y - num::one(),
+            x: self.x - num::one(),
+            y: self.y + num::one(),
         }
     }
     pub fn right_down(&self) -> Self {
@@ -89,8 +89,8 @@ where
     */
     pub fn rot90_cw(&self) -> Self {
         Self {
-            x: self.y,
-            y: -self.x,
+            x: -self.y,
+            y: self.x,
         }
     }
     /**
@@ -98,8 +98,8 @@ where
     */
     pub fn rot90_ccw(&self) -> Self {
         Self {
-            x: -self.y,
-            y: self.x,
+            x: self.y,
+            y: -self.x,
         }
     }
 

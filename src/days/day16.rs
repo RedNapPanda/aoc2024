@@ -2,7 +2,7 @@ use crate::utils::algo::astar::astar;
 use crate::utils::direction::Direction;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
-use crate::utils::PathResult;
+use crate::utils::algo::PathResult;
 use itertools::Itertools;
 use std::fmt::{Display, Formatter, Write};
 

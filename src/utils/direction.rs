@@ -35,10 +35,10 @@ impl Direction {
 
     pub fn vector(&self) -> Node<i64> {
         match self {
-            Direction::North => Node { x: -1, y: 0 },
-            Direction::South => Node { x: 1, y: 0 },
-            Direction::East => Node { x: 0, y: 1 },
-            Direction::West => Node { x: 0, y: -1 },
+            Direction::North => Node { x: 0, y: -1 },
+            Direction::South => Node { x: 0, y: 1 },
+            Direction::East => Node { x: 1, y: 0 },
+            Direction::West => Node { x: -1, y: 0 },
         }
     }
 }
@@ -65,10 +65,10 @@ impl From<Node<i64>> for Direction {
     fn from(value: Node<i64>) -> Self {
         match value {
             Node { x: 0, y: 0 } => panic!("Not a vector"),
-            Node { x, y: 0 } if x < 0 => Direction::North,
-            Node { x, y: 0 } if x > 0 => Direction::South,
-            Node { x: 0, y } if y > 0 => Direction::East,
-            Node { x: 0, y } if y < 0 => Direction::West,
+            Node { x: 0, y } if y < 0 => Direction::North,
+            Node { x: 0, y } if y > 0 => Direction::South,
+            Node { x, y: 0 } if x > 0 => Direction::East,
+            Node { x, y: 0 } if x < 0 => Direction::West,
             _ => panic!("diagonals not implemented"),
         }
     }

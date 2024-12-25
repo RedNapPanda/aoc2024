@@ -9,18 +9,18 @@ pub fn solve1(lines: &[String]) -> i64 {
     for robot in &mut robots {
         let x100 = robot.position.x + 100 * robot.velocity.x;
         let y100 = robot.position.y + 100 * robot.velocity.y;
-        robot.position.x = ((x100 % height) + height) % height;
-        robot.position.y = ((y100 % width) + width) % width;
+        robot.position.x = ((x100 % width) + width) % width;
+        robot.position.y = ((y100 % height) + height) % height;
     }
     let mid_height = height / 2;
     let mid_width = width / 2;
     let mut quadrants = [0; 4];
     for robot in &robots {
         let pos = &robot.position;
-        if pos.x == mid_height || pos.y == mid_width {
+        if pos.y == mid_height || pos.x == mid_width {
             continue;
         }
-        let quadrant = (pos.x > mid_height) as usize * 2 + (pos.y > mid_width) as usize;
+        let quadrant = (pos.y > mid_height) as usize * 2 + (pos.x > mid_width) as usize;
         quadrants[quadrant] += 1;
     }
     quadrants.iter().product::<i64>()
@@ -30,7 +30,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     let (height, width) = (103i64, 101i64);
     let mut grid = Grid::<usize>::with_dimensions(height as usize, width as usize);
     let mut robots = parse(lines);
-    for x in 0..(103 * 101) {
+    for x in 0..(height * width) {
         grid.reset_defaults();
         for robot in &mut robots {
             robot.walk(height, width);
@@ -92,8 +92,8 @@ struct Robot {
 impl Robot {
     fn walk(&mut self, height: i64, width: i64) {
         self.position += &self.velocity;
-        self.position.x = self.normalize(self.position.x, height);
-        self.position.y = self.normalize(self.position.y, width);
+        self.position.x = self.normalize(self.position.x, width);
+        self.position.y = self.normalize(self.position.y, height);
     }
 
     fn normalize(&self, x: i64, bound: i64) -> i64 {
@@ -115,14 +115,10 @@ fn parse(lines: &[String]) -> Vec<Robot> {
             regex
                 .captures_iter(l)
                 .map(|captures| {
-                    // directions are transposed to natural layout where x=row, y=col
-                    // x -> right | y -> down == array[y][x]
-                    // vs
-                    // x -> down | y -> right == array[x][y]
-                    let py = captures[1].parse::<i64>().unwrap();
-                    let px = captures[2].parse::<i64>().unwrap();
-                    let vy = captures[3].parse::<i64>().unwrap();
-                    let vx = captures[4].parse::<i64>().unwrap();
+                    let px = captures[1].parse::<i64>().unwrap();
+                    let py = captures[2].parse::<i64>().unwrap();
+                    let vx = captures[3].parse::<i64>().unwrap();
+                    let vy = captures[4].parse::<i64>().unwrap();
                     let position = Node::from((px, py));
                     let velocity = Node::from((vx, vy));
                     Robot { position, velocity }

@@ -1,4 +1,3 @@
-use crate::utils::{PathNode, PathResult};
 use itertools::Itertools;
 use num::Zero;
 use rustc_hash::FxHashMap;
@@ -7,6 +6,7 @@ use std::collections::hash_map::Entry;
 use std::collections::BinaryHeap;
 use std::fmt::Debug;
 use std::hash::Hash;
+use crate::utils::algo::{PathNode, PathResult};
 
 pub fn astar<N, IN, FN, C, FC, FH, FE>(
     start: &N,

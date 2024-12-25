@@ -66,10 +66,10 @@ impl Display for Direction {
 impl Direction {
     fn vector(&self) -> Node<i64> {
         match self {
-            Direction::Left => Node { x: 0, y: -1 },
-            Direction::Right => Node { x: 0, y: 1 },
-            Direction::Up => Node { x: -1, y: 0 },
-            Direction::Down => Node { x: 1, y: 0 },
+            Direction::Left => Node { x: -1, y: 0 },
+            Direction::Right => Node { x: 1, y: 0 },
+            Direction::Up => Node { x: 0, y: -1 },
+            Direction::Down => Node { x: 0, y: 1 },
         }
     }
 }
@@ -93,7 +93,7 @@ fn walk_robot(
     }
     grid.enumerate()
         .filter_map(|(point, &c)| if c == box_char { Some(point) } else { None })
-        .map(|pos| pos.x * 100 + pos.y)
+        .map(|pos| pos.y * 100 + pos.x)
         .sum()
 }
 
@@ -118,10 +118,10 @@ fn shift_boxes(
         stack
             .iter()
             .sorted_unstable_by(|a, b| match movement {
-                Direction::Left => a.0.y.cmp(&b.0.y),
-                Direction::Right => b.0.y.cmp(&a.0.y),
-                Direction::Up => a.0.x.cmp(&b.0.x),
-                Direction::Down => b.0.x.cmp(&a.0.x),
+                Direction::Left => a.0.x.cmp(&b.0.x),
+                Direction::Right => b.0.x.cmp(&a.0.x),
+                Direction::Up => a.0.y.cmp(&b.0.y),
+                Direction::Down => b.0.y.cmp(&a.0.y),
             })
             .for_each(|(from, to)| {
                 let tmp = *grid.get(to).unwrap();

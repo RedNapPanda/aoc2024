@@ -18,7 +18,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     // B OR C -> Carry
     // x ^ y -> AND + XOR
     // x & y -> OR
-    let (inputs, gates) = parse(lines);
+    let (_inputs, gates) = parse(lines);
     let broken_gates = gates.clone()
         .into_iter()
         .filter(|(c, (a, op, b))| {

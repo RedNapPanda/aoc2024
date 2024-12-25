@@ -10,7 +10,6 @@ pub fn solve1(lines: &[String]) -> i64 {
         }
     }
     println!("Solution: {}", output.iter().join(","));
-    // todo: support non integer value returns for solves
     output.into_iter().join("").parse::<i64>().unwrap()
 }
 
@@ -96,7 +95,6 @@ impl Program {
 
 
 impl From<&[String]> for Program {
-    // todo: make this not shit.  I'm just abusing the puzzle input layout lmao
     fn from(lines: &[String]) -> Self {
         Program {
             index: 0,

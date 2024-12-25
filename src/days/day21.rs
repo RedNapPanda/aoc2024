@@ -76,14 +76,14 @@ impl Grid<char> {
             .map(|(from, to)| {
                 let start = &lookup[&from];
                 let end = &lookup[&to];
-                let x_diff = end.x - start.x;
                 let y_diff = end.y - start.y;
-                let left = (y_diff..0).map(|_| "<");
-                let right = (0..y_diff).map(|_| ">");
-                let down = (0..x_diff).map(|_| "v");
-                let up = (x_diff..0).map(|_| "^");
+                let x_diff = end.x - start.x;
+                let left = (x_diff..0).map(|_| "<");
+                let right = (0..x_diff).map(|_| ">");
+                let down = (0..y_diff).map(|_| "v");
+                let up = (y_diff..0).map(|_| "^");
 
-                let path = if self.get(&Node::new(start.x.max(end.x), start.y.min(end.y)))
+                let path = if self.get(&Node::new(start.x.min(end.x), start.y.max(end.y)))
                     .is_some_and(|t| t == &'_') {
                     up.chain(left)
                         .chain(right)
@@ -106,8 +106,8 @@ impl Grid<char> {
             .map(|(from, to)| {
                 let start = &lookup[&from];
                 let end = &lookup[&to];
-                let x_diff = end.x - start.x;
-                let y_diff = end.y - start.y;
+                let x_diff = end.y - start.y;
+                let y_diff = end.x - start.x;
                 let left = (y_diff..0).map(|_| "<");
                 let right = (0..y_diff).map(|_| ">");
                 let down = (0..x_diff).map(|_| "v");

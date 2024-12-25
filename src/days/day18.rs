@@ -1,7 +1,7 @@
 use crate::utils::algo::astar::astar;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
-use crate::utils::PathResult;
+use crate::utils::algo::PathResult;
 use std::ops::Range;
 
 pub fn solve1(lines: &[String]) -> i64 {
@@ -62,7 +62,7 @@ fn scan(grid: &Grid<char>, size: usize) -> Option<PathResult<Node<i64>, i32>> {
         },
         |_, _| 1,
         |_, _| 0,
-        |node| node.x == (size - 1) as i64 && node.y == (size - 1) as i64,
+        |node| node.y == (size - 1) as i64 && node.x == (size - 1) as i64,
         false,
     )
 }

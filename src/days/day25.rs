@@ -43,7 +43,7 @@ pub fn solve1(lines: &[String]) -> i64 {
     count
 }
 
-pub fn solve2(lines: &[String]) -> i64 {
+pub fn solve2(_lines: &[String]) -> i64 {
     println!("Finished AoC");
     0
 }

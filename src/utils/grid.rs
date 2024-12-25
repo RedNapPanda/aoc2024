@@ -14,14 +14,14 @@ pub struct Grid<T> {
 impl<T> Grid<T> {
     pub fn get(&self, point: &Node<i64>) -> Option<&T> {
         match self.contains(point) {
-            true => Some(&self.rows[point.x as usize][point.y as usize]),
+            true => Some(&self.rows[point.y as usize][point.x as usize]),
             false => None,
         }
     }
 
     pub fn set(&mut self, point: &Node<i64>, value: T) {
         if self.contains(point) {
-            self.rows[point.x as usize][point.y as usize] = value;
+            self.rows[point.y as usize][point.x as usize] = value;
         }
     }
 
@@ -66,25 +66,25 @@ impl<T> Grid<T> {
     pub fn lookup_table(&self) -> impl Iterator<Item=(&T, Node<i64>)> + '_ {
         self.iter()
             .enumerate()
-            .flat_map(|(x, row)| {
+            .flat_map(|(y, row)| {
                 row.iter()
                     .enumerate()
-                    .map(move |(y, v)| (v, Node::from((x as i64, y as i64))))
+                    .map(move |(x, v)| (v, Node::from((x as i64, y as i64))))
             })
     }
 
     pub fn enumerate(&self) -> impl Iterator<Item=(Node<i64>, &T)> + '_ {
         self.iter()
             .enumerate()
-            .flat_map(|(x, row)| {
+            .flat_map(|(y, row)| {
                 row.iter()
                     .enumerate()
-                    .map(move |(y, v)| (Node::from((x as i64, y as i64)), v))
+                    .map(move |(x, v)| (Node::from((x as i64, y as i64)), v))
             })
     }
 
     pub fn _manhattan_distance(&self, start: &Node<i64>, end: &Node<i64>) -> i64 {
-        (start.x - end.x).abs() + (start.y - end.y).abs()
+        (start.y - end.y).abs() + (start.x - end.x).abs()
     }
 }
 
@@ -114,16 +114,16 @@ where
     }
 
     pub fn reset(&mut self, default: T) {
-        for i in 0..self.height() {
-            for j in 0..self.width() {
-                self.rows[i][j] = default.clone()
+        for j in 0..self.height() {
+            for i in 0..self.width() {
+                self.rows[j][i] = default.clone()
             }
         }
     }
-
+ 
     pub fn transpose(&mut self) -> &Self {
         self.rows = (0..self.width())
-            .map(|y| self.rows.iter().map(|row| row[y].clone()).collect_vec())
+            .map(|x| self.rows.iter().map(|row| row[x].clone()).collect_vec())
             .collect_vec();
         self
     }
@@ -134,9 +134,9 @@ where
     T: PartialEq,
 {
     pub fn find(&self, val: T) -> Option<Node<i64>> {
-        for x in 0..self.height() {
-            for y in 0..self.width() {
-                if self[x][y] == val {
+        for y in 0..self.height() {
+            for x in 0..self.width() {
+                if self[y][x] == val {
                     return Some(Node::new(x as i64, y as i64));
                 }
             }
@@ -156,9 +156,9 @@ where
     }
 
     pub fn reset_defaults(&mut self) {
-        for i in 0..self.height() {
-            for j in 0..self.width() {
-                self.rows[i][j] = T::default()
+        for j in 0..self.height() {
+            for i in 0..self.width() {
+                self.rows[j][i] = T::default()
             }
         }
     }
@@ -204,9 +204,9 @@ pub trait Contains<T> {
 impl<T> Contains<&Node<i64>> for Grid<T> {
     fn contains(&self, other: &Node<i64>) -> bool {
         other.x >= 0
-            && other.x < self.height() as i64
+            && other.x < self.width() as i64
             && other.y >= 0
-            && other.y < self.width() as i64
+            && other.y < self.height() as i64
     }
 }
 

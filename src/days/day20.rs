@@ -1,7 +1,7 @@
 use crate::utils::algo::astar::astar;
 use crate::utils::grid::Grid;
 use crate::utils::node::Node;
-use crate::utils::PathResult;
+use crate::utils::algo::PathResult;
 use std::fmt::{Display, Formatter, Write};
 
 pub fn solve1(lines: &[String]) -> i64 {
@@ -47,7 +47,7 @@ fn diamond_search(grid: &Grid<D20Tile>, result: &PathResult<Node<i64>, i64>, sta
             if steps > max_steps {
                 return;
             }
-            let node = Node::new(start.x + x, start.y + y);
+            let node = start + (x, y);
             if let Some(tile) = grid.get(&node) {
                 if tile == &D20Tile::Empty || tile == &D20Tile::End {
                     let skip_cost = result.visited.get(&node).unwrap().cost;

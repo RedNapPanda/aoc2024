@@ -24,11 +24,11 @@ pub fn solve2(lines: &[String]) -> i64 {
     unique
         .iter()
         .filter(|pos| {
-            if grid[pos.x as usize][pos.y as usize] == '.' {
-                grid[pos.x as usize][pos.y as usize] = '#';
+            if grid[pos.y as usize][pos.x as usize] == '.' {
+                grid[pos.y as usize][pos.x as usize] = '#';
             }
             let (_, looped) = walk(&grid, start.clone());
-            grid[pos.x as usize][pos.y as usize] = '.';
+            grid[pos.y as usize][pos.x as usize] = '.';
             looped
         })
         .count() as i64
@@ -59,14 +59,14 @@ fn walk(grid: &Grid<char>, pos: Node<i64>) -> (SeenNodes, bool) {
             }
             seen.insert(fast.clone());
             let fast_next = &fast.0 + &fast.1;
-            if grid.contains(&fast_next) && grid[fast_next.x as usize][fast_next.y as usize] == '#'
+            if grid.contains(&fast_next) && grid[fast_next.y as usize][fast_next.x as usize] == '#'
             {
                 fast.1 = fast.1.rot90_cw();
                 continue;
             }
             fast.0 = fast_next;
         }
-        if grid.contains(&next) && grid[next.x as usize][next.y as usize] == '#' {
+        if grid.contains(&next) && grid[next.y as usize][next.x as usize] == '#' {
             node.1 = node.1.rot90_cw();
         } else {
             node.0 = next;
