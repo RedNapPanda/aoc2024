@@ -25,6 +25,7 @@ fn main() -> Result<()> {
     } else {
         opt.day..=opt.day
     };
+    let start = Instant::now();
     for day in range {
         let lines = input::read_input(day);
         let func1 = day_fn(day, true);
@@ -38,6 +39,10 @@ fn main() -> Result<()> {
         let result2 = func2(&lines);
         let elapsed2 = time2.elapsed();
         println!("Day {} | P2: {:?} in {:?}", day, result2, elapsed2);
+    }
+    if opt.day == 0 {
+        let elapsed = start.elapsed();
+        println!("Completed in {:?}", elapsed);
     }
 
     Ok(())

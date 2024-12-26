@@ -22,7 +22,7 @@ pub fn solve2(lines: &[String]) -> i64 {
     let broken_gates = gates.clone()
         .into_iter()
         .filter(|(c, (a, op, b))| {
-            if a.ends_with("00") || b.ends_with("00") {
+            if a[1..] == *"00" || b[1..] == *"00" {
                 return false;
             }
             // Z gates must follow an XOR op except the last bit as it's the carry bit
@@ -30,14 +30,13 @@ pub fn solve2(lines: &[String]) -> i64 {
             if op == &Op::XOR {
                 let axy = a.starts_with("x") || a.starts_with("y");
                 let bxy = b.starts_with("x") || b.starts_with("y");
-                if !axy && !bxy && !kz {
-                    return true;
-                } else if !kz {
-                    //should be used in an AND
+                if axy || bxy {
+                    // should be used in an AND
                     return !gates.iter().any(|(_, gate)| gate.1 == Op::AND && (gate.0 == *c || gate.2 == *c));
                 }
-                return !kz && !axy && !bxy;
+                return !kz;
             } else if op == &Op::AND {
+                // first AND is part of a half adder
                 return !gates.iter().any(|(_, gate)| gate.1 == Op::OR && (gate.0 == *c || gate.2 == *c));
             }
             kz && *c != "z45"
