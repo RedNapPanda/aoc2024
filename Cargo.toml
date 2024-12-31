@@ -6,8 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-#krampus = { path = "../krampus" }
-
 color-eyre = "0.6.3"
 indexmap = "2.7.0"
 itertools = "0.13.0"

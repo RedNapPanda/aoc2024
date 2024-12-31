@@ -14,7 +14,7 @@ use structopt::StructOpt;
 #[structopt(name = "aoc")]
 struct Opt {
     #[structopt(short, long)]
-    day: u8,
+    day: u16,
 }
 
 fn main() -> Result<()> {
@@ -40,12 +40,10 @@ fn main() -> Result<()> {
         let elapsed2 = time2.elapsed();
         println!("Day {} | P2: {:?} in {:?}", day, result2, elapsed2);
     }
-    if opt.day == 0 {
-        let elapsed = start.elapsed();
-        println!("Completed in {:?}", elapsed);
-    }
-
+    let elapsed = start.elapsed();
+    println!("Completed in {:?}", elapsed);
     Ok(())
 }
+
 
 day_fn!(01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25);

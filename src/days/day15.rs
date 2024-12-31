@@ -29,7 +29,7 @@ fn parse(lines: &[String], part2: bool) -> (Grid<char>, Vec<Direction>) {
                         'O' => ['[', ']'],
                         '@' => ['@', '.'],
                         '.' => ['.', '.'],
-                        _ => unimplemented!(),
+                        _ => panic!("`{}` is invalid", s),
                     })
                     .collect_vec()
             })
@@ -81,7 +81,7 @@ impl From<char> for Direction {
             '>' => Direction::Right,
             '^' => Direction::Up,
             'v' => Direction::Down,
-            _ => unimplemented!(),
+            _ => panic!("`{}` is invalid", c),
         }
     }
 }
